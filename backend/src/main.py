@@ -14,4 +14,4 @@ app.add_middleware(
 
 @app.get("/")
 def home():
-    return "Hello, World!"
+    return "This is connected to the backend: main.py"
