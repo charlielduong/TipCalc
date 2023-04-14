@@ -2,20 +2,17 @@
     <div class="form-container">
       <form>
         <div v-for="(field, index) in formFields" :key="index">
-        <label :for="field.label" class="form-label">{{ field.label }}</label>
-        <template v-if="field.type === 'textarea'">
-          <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
-        </template>
-        <template v-else-if="field.type === 'number'">
-          <input :type="field.type" :id="field.label" v-model="field.value" class="form-input" @change="createInputs">
-        </template>
-        <template v-else>
-          <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
-        </template>
-      </div>
-      <div v-for="(person, index) in people" :key="index">
-        <input type="text" :id="'person' + (index + 1)" v-model="person" class="form-input">
-      </div>
+          <label :for="field.label" class="form-label">{{ field.label }}</label>
+          <template v-if="field.type === 'textarea'">
+            <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
+          </template>
+          <template v-else-if="field.type === 'number'">
+            <input :type="field.type" :id="field.label" v-model="field.value" class="form-input" @change="createInputs">
+          </template>
+          <template v-else>
+            <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
+          </template>
+        </div>
       </form>
     </div>
   </template>
@@ -85,6 +82,10 @@
           field => field.label === 'Number of people splitting the bill'
         ).value
       )
+      if (isNaN(numberOfPeople) || numberOfPeople <= 0) {
+        // Return early if NaN Is inputted
+        return
+      }
       this.people = new Array(numberOfPeople).fill('')
       this.formFields.splice(1) // Remove any existing dynamic fields
       
