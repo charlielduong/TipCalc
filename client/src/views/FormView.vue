@@ -1,6 +1,6 @@
 <template>
     <div class="form-container">
-        <form> <!-- Main form -->
+        <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
 
             <!-- Looping through each field in the formFields array. -->
             <div v-for="(field, index) in formFields" :key="index">
@@ -25,6 +25,18 @@
             <button v-if="isFormValid" @click="submitForm">Submit</button>
 
         </form> <!-- END Main Form -->
+
+
+        <!-- Display form data -->
+        <div v-if="formData">
+            <h2>Form Data</h2>
+            <ul>
+                <li v-for="(value, key) in formData" :key="key">
+                    {{ key }}: {{ value }}
+                </li>
+            </ul>
+        </div>
+
     </div>
 
     <!-- TODO: Add in Footer with social media -->
@@ -75,9 +87,13 @@ label {
   
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
+            formSubmitted: false,
+            formData: null, // Initialize the form data property to null
             formFields: [
                 {
                     label: 'Number of people splitting the bill',
@@ -129,13 +145,10 @@ export default {
             }
         }, //END createInputs()
         submitForm() {
-            // Handle form submission here
-            console.log('Form submitted!')
-            // Reset the form to its initial state
-            this.formFields.forEach(field => {
-                field.value = ''
-            })
-            this.people = []
+            this.formSubmitted = true;
+
+            // Set the form data property to the submitted data
+            this.formData = this.formFields
         }
     }
 }
