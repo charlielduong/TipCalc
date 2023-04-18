@@ -16,3 +16,9 @@ app.add_middleware(
 @app.get("/")
 def home():
     return "This is connected to the backend: main.py"
+
+# DOESNT WORK
+@app.post("/form")
+async def submit_form_data(formData: dict):
+    # handle form data
+    return {"message": "Form data received"}
