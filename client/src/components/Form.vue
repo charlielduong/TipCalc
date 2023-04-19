@@ -149,20 +149,20 @@ export default {
             // Set the form data property to the submitted data
             this.formData = this.formFields
 
-            // FAILED ATTEMPT OF PUSHING FORM DATA TO THE API
-            // fetch('http://localhost:5000/form', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(this.formData)
-            // })
-            //     .then(response => {
-            //         console.log(response);
-            //     })
-            //     .catch(error => {
-            //         console.error(error)
-            //     });
+            //TODO: Clean up the json input of form data to fit pydantic model
+            fetch('http://localhost:5000/form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.formData)
+            })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.error(error)
+                });
         }
     }
 }

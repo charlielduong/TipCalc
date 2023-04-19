@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from src.models import FormObject
+
 
 app = FastAPI()
 
@@ -19,6 +20,9 @@ def home():
 
 # DOESNT WORK
 @app.post("/form")
-async def submit_form_data(formData: dict):
-    # handle form data
-    return {"message": "Form data received"}
+async def submit_form_data(new_form_data: FormObject):
+    return {"data": new_form_data}
+
+@app.get("/form")
+async def get_form_data(new_form_data: FormObject):
+    return {"data": new_form_data}
