@@ -148,22 +148,21 @@ export default {
             this.formSubmitted = true;
             // Set the form data property to the submitted data
             this.formData = this.formFields
-
-            //TODO: Clean up the json input of form data to fit pydantic model
-            fetch('http://localhost:5000/form', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(this.formData)
-            })
+            this.formData.shift() // Removing first item in array
+            const formObject = { form: JSON.stringify(this.formData) };
+            console.log("Form Obj: $o",formObject)
+            
+            axios.post('http://localhost:5000/form',formObject)
                 .then(response => {
-                    console.log(response);
+                    console.log(response)
                 })
                 .catch(error => {
-                    console.error(error)
-                });
+                    console.log(error)
+                })
         }
     }
 }
 </script>
+
+
+
