@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
-from src.models import FormObject, FormItem
-
+from src.models import FormItem
+import logging
 
 app = FastAPI()
 
@@ -21,6 +21,7 @@ def home():
 # DOESNT WORK
 @app.post("/form")
 async def submit_form_data(new_form_data: FormItem):
+    logging.info("THIS IS RUNNING")
     return {"data": new_form_data}
 
 # @app.get("/form")

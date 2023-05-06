@@ -4,8 +4,5 @@ from pydantic import BaseModel
 class FormItem(BaseModel):
     label: Optional[str]
     type: Optional[str]
-    value: Optional[str]
-
-class FormObject(BaseModel):
-    form: List[FormItem]    
+    value: Optional[str]  
 

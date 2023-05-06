@@ -22,7 +22,7 @@
             </div>
 
             <!-- Creating the button once the form fields are filled out -->
-            <button v-if="isFormValid" @click="submitForm">Submit</button>
+            <button v-if="isFormValid" @click="submitForm">Next</button>
 
         </form> <!-- END Main Form -->
 
@@ -144,6 +144,16 @@ export default {
                 })
             }
         }, //END createInputs()
+        handleSubmit() {
+            const oldForm = document.getElementById("form-container");
+            //oldForm.reset(); // clear form data
+            const newForm = document.createElement("form");
+            newForm.id = "myForm";
+            newForm.innerHTML = `
+                <!-- new form fields here -->
+                <button type="submit">Submit</button>`;
+            oldForm.parentNode.replaceChild(newForm, oldForm); // replace old form with new one
+        },
         submitForm() {
             this.formSubmitted = true;
             // Set the form data property to the submitted data
