@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
+from src.models import FormItem
+import logging
 
 app = FastAPI()
 
@@ -15,3 +17,13 @@ app.add_middleware(
 @app.get("/")
 def home():
     return "This is connected to the backend: main.py"
+
+# DOESNT WORK
+@app.post("/form")
+async def submit_form_data(new_form_data: FormItem):
+    logging.info("THIS IS RUNNING")
+    return {"data": new_form_data}
+
+# @app.get("/form")
+# async def get_form_data(new_form_data: FormObject):
+#     return {"data": new_form_data}

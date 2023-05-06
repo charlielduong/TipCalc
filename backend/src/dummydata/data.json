@@ -1,0 +1,20 @@
+{
+    "form_data": {
+        "num_columns": "3",
+        "tip_percentage": "20",
+        "columns": {
+            "charlie": {
+                "total_amount": 54.3,
+                "items":["Apple", "Banana", "Cherry"]
+            },
+            "isaac": {
+                "total_amount": 73.2,
+                "items":["Brisket","Cherry"]
+            },
+            "ashley": {
+                "total_amount": 20.2,
+                "items":["Apple"]
+            }
+        }
+    }
+}
