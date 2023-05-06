@@ -144,7 +144,7 @@ export default {
                 })
             }
         }, //END createInputs()
-        handleSubmit() {
+        handleSubmit() { // PROTOTYPE
             const oldForm = document.getElementById("form-container");
             //oldForm.reset(); // clear form data
             const newForm = document.createElement("form");
