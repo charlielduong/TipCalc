@@ -26,7 +26,6 @@
 
         </form> <!-- END Main Form -->
 
-
         <!-- Display form data -->
         <div v-if="formData">
             <h2>Form Data</h2>
@@ -160,7 +159,7 @@ export default {
             this.formData = this.formFields
             this.formData.shift() // Removing first item in array
             const formObject = { form: JSON.stringify(this.formData) };
-            console.log("Form Obj: $o",formObject)
+            this.handleSubmit()
             
             axios.post('http://localhost:5000/form',formObject)
                 .then(response => {
