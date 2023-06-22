@@ -1,43 +1,44 @@
 <template>
     <div class="form-container">
-        <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
+        <div v-if="currentForm === 1">
+            <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
+                <!-- Looping through each field in the formFields array. -->
+                <div v-for="(field, index) in formFields" :key="index">
+                    <label :for="field.label" class="form-label">{{ field.label }}</label>
+                    <!-- Printing the label (the prompt) -->
 
-            <!-- Looping through each field in the formFields array. -->
-            <div v-for="(field, index) in formFields" :key="index">
-                <label :for="field.label" class="form-label">{{ field.label }}</label>
-                <!-- Printing the label (the prompt) -->
-
-                <!-- these template sections will print out either textarea, an input, or an input with an additional call to createInputs() -->
-                <template v-if="field.type === 'textarea'">
-                    <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
-                </template>
-                <template v-else-if="field.type === 'number'">
-                    <input :type="field.type" :id="field.label" v-model="field.value" class="form-input"
-                        @input="createInputs">
-                </template>
-                <template v-else>
-                    <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
-                </template>
-                <!-- END input printing section -->
-            </div>
-
-            <!-- Creating the button once the form fields are filled out -->
-            <button v-if="isFormValid" @click="submitForm">Next</button>
-
-        </form> <!-- END Main Form -->
-
-        <!-- Display form data -->
-        <div v-if="formData">
-            <h2>Form Data</h2>
-            <ul>
-                <li v-for="(value, key) in formData" :key="key">
-                    {{ key }}: {{ value }}
-                </li>
-            </ul>
+                    <!-- these template sections will print out either textarea, an input, or an input with an additional call to createInputs() -->
+                    <template v-if="field.type === 'textarea'">
+                        <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
+                    </template>
+                    <template v-else-if="field.type === 'number'">
+                        <input :type="field.type" :id="field.label" v-model="field.value" class="form-input"
+                            @input="createInputs">
+                    </template>
+                    <template v-else>
+                        <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
+                    </template>
+                    <!-- END input printing section -->
+                </div>
+                <!-- Creating the button once the form fields are filled out -->
+                <button v-if="isFormValid" @click="submitForm(1)">Next</button>
+            </form> <!-- END Main Form -->
         </div>
 
+        <div v-else-if="currentForm === 2">
+            <h1>test</h1>
+            <div>
+                <ul>
+                    <li v-for="(value, key) in formData" :key="key">
+                    {{ key }}: {{ value }}
+                </li>
+                </ul>
+            </div>
+            <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
+                <button v-if="isFormValid" @click="submitForm(2)">Submit</button>
+            </form> <!-- END Main Form -->
+        </div>
     </div>
-
     <!-- TODO: Add in Footer with social media -->
 </template>
   
@@ -91,8 +92,9 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            currentForm: 1,
             formSubmitted: false,
-            formData: null, // Initialize the form data property to null
+            form1Data: null, // Initialize the form data property to null
             formFields: [
                 {
                     label: 'Number of people splitting the bill',
@@ -105,6 +107,7 @@ export default {
     },
     computed: {
         isFormValid() {
+            // Checks if every value in for each formField is specified (aka, each name row has a name)
             return this.formFields.every(field => field.value !== '')
         }
     },
@@ -143,31 +146,25 @@ export default {
                 })
             }
         }, //END createInputs()
-        handleSubmit() { // PROTOTYPE
-            const oldForm = document.getElementById("form-container");
-            //oldForm.reset(); // clear form data
-            const newForm = document.createElement("form");
-            newForm.id = "myForm";
-            newForm.innerHTML = `
-                <!-- new form fields here -->
-                <button type="submit">Submit</button>`;
-            oldForm.parentNode.replaceChild(newForm, oldForm); // replace old form with new one
-        },
-        submitForm() {
-            this.formSubmitted = true;
-            // Set the form data property to the submitted data
-            this.formData = this.formFields
-            this.formData.shift() // Removing first item in array
-            const formObject = { form: JSON.stringify(this.formData) };
-            this.handleSubmit()
-            
-            axios.post('http://localhost:5000/form',formObject)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+        submitForm(formNumber) {
+            if(formNumber === 1){
+                this.form1Data = { ...this.formData }
+                this.currentForm++;
+            }else if (formNumber === 2){
+                this.formSubmitted = true;
+                // Set the form data property to the submitted data
+                this.formData = this.formFields
+                this.formData.shift() // Removing first item in array
+                const formObject = { form: JSON.stringify(this.formData) };
+                
+                axios.post('http://localhost:5000/form',formObject)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
         }
     }
 }
