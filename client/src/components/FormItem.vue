@@ -1,19 +1,16 @@
 <template>
     <div class="form-container">
         <div v-if="currentForm === 1">
-            <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
-                <!-- Looping through each field in the formFields array. -->
-                <div v-for="(field, index) in formFields" :key="index">
+            <form @submit.prevent="submitForm"> <!-- Main form -->
+                <!-- Looping through each field in the form1Fields array. -->
+                <div v-for="(field, index) in form1Fields" :key="index">
                     <label :for="field.label" class="form-label">{{ field.label }}</label>
                     <!-- Printing the label (the prompt) -->
 
                     <!-- these template sections will print out either textarea, an input, or an input with an additional call to createInputs() -->
-                    <template v-if="field.type === 'textarea'">
-                        <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
-                    </template>
-                    <template v-else-if="field.type === 'number'">
+                    <template v-if="field.type === 'number'">
                         <input :type="field.type" :id="field.label" v-model="field.value" class="form-input"
-                            @input="createInputs">
+                            @input="createInputs(1)">
                     </template>
                     <template v-else>
                         <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
@@ -21,25 +18,35 @@
                     <!-- END input printing section -->
                 </div>
                 <!-- Creating the button once the form fields are filled out -->
-                <button v-if="isFormValid" @click="submitForm(1)">Next</button>
+                <button v-if="isForm1Valid" @click="submitForm(1)">Next</button>
             </form> <!-- END Main Form -->
         </div>
 
         <div v-else-if="currentForm === 2">
-            <h1>test</h1>
             <div>
-                <ul>
-                    <li v-for="(value, key) in formData" :key="key">
-                    {{ key }}: {{ value }}
-                </li>
-                </ul>
+                <!-- <form v-if="!formSubmitted" @submit.prevent="submitForm">
+                    <div v-for="(field, index) in form2Fields" :key="index">
+                        <template v-if="field.type === 'text'">
+                            <input :id="field.label" v-model="field.value" class="form-input" @input="createInputs(2)">
+                        </template>
+                        <template v-else>
+                            <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
+                        </template>
+                    
+                    </div>
+                    <button @click="submitForm(2)">Submit</button>
+                </form> -->
+                <form v-if="!formSubmitted" @submit.prevent="submitForm">
+                    <div v-for="(person, index) in people" :key="index">
+                        <label>{{ people }}</label>
+                        <input type="number" step="0.01" :value="form2Fields[index].value" @input="createInputs(2)" />
+                    </div>
+                    <button v-if="isForm2Valid" @click="submitForm(2)">Submit</button>
+                </form>
+
             </div>
-            <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
-                <button v-if="isFormValid" @click="submitForm(2)">Submit</button>
-            </form> <!-- END Main Form -->
         </div>
     </div>
-    <!-- TODO: Add in Footer with social media -->
 </template>
   
 <style>
@@ -94,70 +101,123 @@ export default {
         return {
             currentForm: 1,
             formSubmitted: false,
-            form1Data: null, // Initialize the form data property to null
-            formFields: [
+            formData: null, // Initialize the form data property to null
+            people: null,
+            form1Fields: [
                 {
                     label: 'Number of people splitting the bill',
                     type: 'number',
                     value: ''
                 }
             ],
-            people: []
+            form2Fields: [
+                {
+                    label: `amount spent:`,
+                    type: 'text',
+                    value: ''
+                }
+            ]
+
         }
     },
     computed: {
-        isFormValid() {
-            // Checks if every value in for each formField is specified (aka, each name row has a name)
-            return this.formFields.every(field => field.value !== '')
-        }
+        isForm1Valid() {
+            return this.form1Fields.every(field => field.value !== '')
+        },
+        isForm2Valid() {
+            return this.form2Fields.every(field => field.value !== '')
+        },
+        // peopleList(){
+        //     return this.form2Fields.map(field => field.label)
+        // }
     },
     methods: {
-        createInputs() {
+        createInputs(formNumber) {
             const numberOfPeople = parseInt(
-                this.formFields.find(
+                this.form1Fields.find(
                     field => field.label === 'Number of people splitting the bill'
                 ).value
             )
+            if (formNumber === 1) {
+                // Resets the form if the Num People input is empty
+                if (!numberOfPeople) {
+                    // Resets the form fields and people array to their initial values
+                    this.form1Fields = [
+                        {
+                            label: 'Number of people splitting the bill',
+                            type: 'number',
+                            value: ''
+                        }
+                    ]
+                    this.people = []
+                    return
+                }
 
-            // Resets the form if the Num People input is empty
-            if (!numberOfPeople) {
-                // Resets the form fields and people array to their initial values
-                this.formFields = [
-                    {
-                        label: 'Number of people splitting the bill',
-                        type: 'number',
+                // Resetting the people array
+                this.people = new Array(numberOfPeople).fill('')
+                this.form1Fields.splice(1) // Remove any existing dynamic fields. 1 so that it doesn't remove the first question
+
+                // Generate new form fields
+                for (let i = 0; i < numberOfPeople; i++) {
+                    this.form1Fields.push({
+                        label: `Person ${i + 1} name`,
+                        type: 'text',
                         value: ''
-                    }
-                ]
-                this.people = []
-                return
+                    })
+                }
             }
+            else if (formNumber === 2) {
 
-            // Resetting the people array
-            this.people = new Array(numberOfPeople).fill('')
-            this.formFields.splice(1) // Remove any existing dynamic fields. 1 so that it doesn't remove the first question
+                // Resets the form if the Num People input is empty
+                // if (!numberOfPeople) {
+                //     // Resets the form fields and people array to their initial values
+                //     this.form2Fields = [
+                //         {
+                //             label: `amount spent:`,
+                //             type: 'text',
+                //             value: ''
+                //         }
+                //     ]
+                //     this.people = []
+                //     return
 
-            // Generate new form fields
-            for (let i = 0; i < numberOfPeople; i++) {
-                this.formFields.push({
-                    label: `Person ${i + 1} name`,
-                    type: 'text',
-                    value: ''
-                })
+
+                // }
+
+                // Generate new form fields
+                this.people = this.peopleList()
+                for (let i = 0; i < numberOfPeople; i++) {
+                    this.form2Fields.push({
+                        label: `total amount: `,
+                        type: 'text',
+                        value: ''
+                    })
+                }
             }
         }, //END createInputs()
+
+        peopleList() {
+            const people = [];
+            this.formData.forEach(field => {
+                if (field.value) {
+                    people.push(field.value);
+                }
+            });
+            return people;
+        },
         submitForm(formNumber) {
-            if(formNumber === 1){
-                this.form1Data = { ...this.formData }
-                this.currentForm++;
-            }else if (formNumber === 2){
-                this.formSubmitted = true;
+            if (formNumber === 1) {
+
                 // Set the form data property to the submitted data
-                this.formData = this.formFields
+                this.formData = this.form1Fields
                 this.formData.shift() // Removing first item in array
+                this.people = this.formData
+                this.currentForm = 2;
+            } else if (formNumber === 2) {
+                this.formSubmitted = true;
+
                 const formObject = { form: JSON.stringify(this.formData) };
-                
-                axios.post('http://localhost:5000/form',formObject)
+                axios.post('http://localhost:5000/form', formObject)
                     .then(response => {
                         console.log(response)
                     })

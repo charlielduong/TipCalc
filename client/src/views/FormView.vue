@@ -7,7 +7,7 @@
   
 
 <script>
-import Form from '@/components/FormItem.vue'
+import Form from '@/components/NewFormItem.vue'
 
 export default {
   name: 'FormView',
