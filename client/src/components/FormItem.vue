@@ -24,18 +24,6 @@
 
         <div v-else-if="currentForm === 2">
             <div>
-                <!-- <form v-if="!formSubmitted" @submit.prevent="submitForm">
-                    <div v-for="(field, index) in form2Fields" :key="index">
-                        <template v-if="field.type === 'text'">
-                            <input :id="field.label" v-model="field.value" class="form-input" @input="createInputs(2)">
-                        </template>
-                        <template v-else>
-                            <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
-                        </template>
-                    
-                    </div>
-                    <button @click="submitForm(2)">Submit</button>
-                </form> -->
                 <form v-if="!formSubmitted" @submit.prevent="submitForm">
                     <div v-for="(person, index) in people" :key="index">
                         <label>{{ people }}</label>
@@ -126,10 +114,7 @@ export default {
         },
         isForm2Valid() {
             return this.form2Fields.every(field => field.value !== '')
-        },
-        // peopleList(){
-        //     return this.form2Fields.map(field => field.label)
-        // }
+        }
     },
     methods: {
         createInputs(formNumber) {
@@ -167,23 +152,6 @@ export default {
                 }
             }
             else if (formNumber === 2) {
-
-                // Resets the form if the Num People input is empty
-                // if (!numberOfPeople) {
-                //     // Resets the form fields and people array to their initial values
-                //     this.form2Fields = [
-                //         {
-                //             label: `amount spent:`,
-                //             type: 'text',
-                //             value: ''
-                //         }
-                //     ]
-                //     this.people = []
-                //     return
-
-
-                // }
-
                 // Generate new form fields
                 this.people = this.peopleList()
                 for (let i = 0; i < numberOfPeople; i++) {

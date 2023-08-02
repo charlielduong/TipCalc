@@ -1,6 +1,6 @@
 <template>
     <div class="form-container">
-        <form @submit.prevent="submitForm" v-if="!showSecondForm">
+        <form @submit.prevent="submitForm" v-if="showFirstForm">
             <label for="numberOfPeople">Number of people splitting the bill</label>
 
             <!-- Start form -->
@@ -24,8 +24,28 @@
                 <label>{{ listOfPeople[index] }}'s Amount: </label>
                 <input type="number" step="0.01" v-model="listOfAmounts[index]" required>
             </div>
+            <button type="submit">Next</button>
+        </form>
+
+        <form @submit.prevent="submitForm" v-if="showThirdForm">
+            <!-- Third form using input values from the first form -->
+            <h2>Third Form</h2>
+            <label>Tip %: </label>
+            <input type="number" step="0.01" v-model="tip" required>
+            <label>Tax %: </label>
+            <input type="number" step="0.01" v-model="tax" required>
+
             <button type="submit">Submit</button>
         </form>
+
+        <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
+            <h3>Summary</h3>
+            <p>Sub-Total: {{ this.calculateSubTotal }}</p>
+            <p>Tip: {{ this.calculateTip }}</p>
+            <p>Tax: {{ this.calculateTax }}</p>
+            <p>Total: {{ this.calculateTotal }}</p>
+
+        </div>
     </div>
 </template>
 
@@ -79,18 +99,44 @@ export default {
             numberOfPeople: null,
             listOfPeople: [],
             listOfAmounts: [],
-            showSecondForm: false
+            showFirstForm: true,
+            showSecondForm: false,
+            showThirdForm: false,
+            tip: 0,
+            tax: 0
+        }
+    },
+    computed: {
+        calculateSubTotal() {
+            return this.listOfAmounts.reduce((sum, num) => sum + num, 0)
+        },
+        calculateTotal() {
+            return (this.calculateSubTotal + (this.calculateSubTotal * (this.tip * .01)) + (this.calculateSubTotal * (this.tax * .01))).toFixed(2).padEnd(4, '0')
+        },
+        calculateTip() {
+            return (this.calculateSubTotal * (this.tip * .01)).toFixed(2).padEnd(4, '0')
+        },
+        calculateTax() {
+            return (this.calculateSubTotal * (this.tax * .01)).toFixed(2).padEnd(4, '0')
+            //Used to wrap this w/ Number(return statement) to reeturn this as a number instead of string
         }
     },
     methods: {
         submitForm() {
-        
-            if(!this.showSecondForm){
-                console.log(this.listOfPeople)   
-            }else{
+            if (this.showSecondForm) {
                 console.log(this.listOfAmounts)
+                this.showSecondForm = false;
+                this.showThirdForm = true;
+            } else if (this.showThirdForm) {
+                console.log(this.tip)
+                console.log(this.tax)
+                this.showThirdForm = false
+
+            } else {
+                console.log(this.listOfPeople)
+                this.showFirstForm = false;
+                this.showSecondForm = true;
             }
-            this.showSecondForm = true 
         }
     }
 
