@@ -1,46 +1,54 @@
 <template>
     <div class="form-container">
-        <form v-if="!formSubmitted" @submit.prevent="submitForm"> <!-- Main form -->
+        <form @submit.prevent="submitForm" v-if="showFirstForm">
+            <label for="numberOfPeople">Number of people splitting the bill</label>
 
-            <!-- Looping through each field in the formFields array. -->
-            <div v-for="(field, index) in formFields" :key="index">
-                <label :for="field.label" class="form-label">{{ field.label }}</label>
-                <!-- Printing the label (the prompt) -->
+            <!-- Start form -->
+            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" required>
 
-                <!-- these template sections will print out either textarea, an input, or an input with an additional call to createInputs() -->
-                <template v-if="field.type === 'textarea'">
-                    <textarea :id="field.label" v-model="field.value" class="form-input"></textarea>
-                </template>
-                <template v-else-if="field.type === 'number'">
-                    <input :type="field.type" :id="field.label" v-model="field.value" class="form-input"
-                        @input="createInputs">
-                </template>
-                <template v-else>
-                    <input :type="field.type" :id="field.label" v-model="field.value" class="form-input">
-                </template>
-                <!-- END input printing section -->
+            <template v-if="numberOfPeople">
+                <div v-for="index in numberOfPeople" :key="index">
+                    <label>Person {{ index }} name:</label>
+                    <input type="text" v-model="listOfPeople[index - 1]" required>
+                </div>
+
+            </template>
+
+            <button type="submit">Next</button>
+        </form>
+
+        <form @submit.prevent="submitForm" v-if="showSecondForm">
+            <!-- Second form using input values from the first form -->
+            <h2>Second Form</h2>
+            <div v-for="(person, index) in listOfPeople" :key="index">
+                <label>{{ listOfPeople[index] }}'s Amount: </label>
+                <input type="number" step="0.01" v-model="listOfAmounts[index]" required>
             </div>
+            <button type="submit">Next</button>
+        </form>
 
-            <!-- Creating the button once the form fields are filled out -->
-            <button v-if="isFormValid" @click="submitForm">Next</button>
+        <form @submit.prevent="submitForm" v-if="showThirdForm">
+            <!-- Third form using input values from the first form -->
+            <h2>Third Form</h2>
+            <label>Tip %: </label>
+            <input type="number" step="0.01" v-model="tip" required>
+            <label>Tax %: </label>
+            <input type="number" step="0.01" v-model="tax" required>
 
-        </form> <!-- END Main Form -->
+            <button type="submit">Submit</button>
+        </form>
 
-        <!-- Display form data -->
-        <div v-if="formData">
-            <h2>Form Data</h2>
-            <ul>
-                <li v-for="(value, key) in formData" :key="key">
-                    {{ key }}: {{ value }}
-                </li>
-            </ul>
+        <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
+            <h3>Summary</h3>
+            <p>Sub-Total: {{ this.calculateSubTotal }}</p>
+            <p>Tip: {{ this.calculateTip }}</p>
+            <p>Tax: {{ this.calculateTax }}</p>
+            <p>Total: {{ this.calculateTotal }}</p>
+
         </div>
-
     </div>
-
-    <!-- TODO: Add in Footer with social media -->
 </template>
-  
+
 <style>
 .form-container {
     display: flex;
@@ -83,95 +91,55 @@ label {
     border-bottom: 1px solid #000;
 }
 </style>
-  
 
 <script>
-import axios from 'axios';
-
 export default {
     data() {
         return {
-            formSubmitted: false,
-            formData: null, // Initialize the form data property to null
-            formFields: [
-                {
-                    label: 'Number of people splitting the bill',
-                    type: 'number',
-                    value: ''
-                }
-            ],
-            people: []
+            numberOfPeople: null,
+            listOfPeople: [],
+            listOfAmounts: [],
+            showFirstForm: true,
+            showSecondForm: false,
+            showThirdForm: false,
+            tip: 0,
+            tax: 0
         }
     },
     computed: {
-        isFormValid() {
-            return this.formFields.every(field => field.value !== '')
+        calculateSubTotal() {
+            return this.listOfAmounts.reduce((sum, num) => sum + num, 0)
+        },
+        calculateTotal() {
+            return (this.calculateSubTotal + (this.calculateSubTotal * (this.tip * .01)) + (this.calculateSubTotal * (this.tax * .01))).toFixed(2).padEnd(4, '0')
+        },
+        calculateTip() {
+            return (this.calculateSubTotal * (this.tip * .01)).toFixed(2).padEnd(4, '0')
+        },
+        calculateTax() {
+            return (this.calculateSubTotal * (this.tax * .01)).toFixed(2).padEnd(4, '0')
+            //Used to wrap this w/ Number(return statement) to reeturn this as a number instead of string
         }
     },
     methods: {
-        createInputs() {
-            const numberOfPeople = parseInt(
-                this.formFields.find(
-                    field => field.label === 'Number of people splitting the bill'
-                ).value
-            )
-
-            // Resets the form if the Num People input is empty
-            if (!numberOfPeople) {
-                // Resets the form fields and people array to their initial values
-                this.formFields = [
-                    {
-                        label: 'Number of people splitting the bill',
-                        type: 'number',
-                        value: ''
-                    }
-                ]
-                this.people = []
-                return
-            }
-
-            // Resetting the people array
-            this.people = new Array(numberOfPeople).fill('')
-            this.formFields.splice(1) // Remove any existing dynamic fields. 1 so that it doesn't remove the first question
-
-            // Generate new form fields
-            for (let i = 0; i < numberOfPeople; i++) {
-                this.formFields.push({
-                    label: `Person ${i + 1} name`,
-                    type: 'text',
-                    value: ''
-                })
-            }
-        }, //END createInputs()
-        handleSubmit() { // PROTOTYPE
-            const oldForm = document.getElementById("form-container");
-            //oldForm.reset(); // clear form data
-            const newForm = document.createElement("form");
-            newForm.id = "myForm";
-            newForm.innerHTML = `
-                <!-- new form fields here -->
-                <button type="submit">Submit</button>`;
-            oldForm.parentNode.replaceChild(newForm, oldForm); // replace old form with new one
-        },
         submitForm() {
-            this.formSubmitted = true;
-            // Set the form data property to the submitted data
-            this.formData = this.formFields
-            this.formData.shift() // Removing first item in array
-            const formObject = { form: JSON.stringify(this.formData) };
-            this.handleSubmit()
-            
-            axios.post('http://localhost:5000/form',formObject)
-                .then(response => {
-                    console.log(response)
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            if (this.showSecondForm) {
+                console.log(this.listOfAmounts)
+                this.showSecondForm = false;
+                this.showThirdForm = true;
+            } else if (this.showThirdForm) {
+                console.log(this.tip)
+                console.log(this.tax)
+                this.showThirdForm = false
+
+            } else {
+                console.log(this.listOfPeople)
+                this.showFirstForm = false;
+                this.showSecondForm = true;
+            }
         }
     }
+
 }
+
 </script>
-
-
-
