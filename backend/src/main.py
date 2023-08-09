@@ -8,8 +8,12 @@ from PIL import Image
 import pytesseract
 import json
 import re
+import requests
 
 app = FastAPI()
+
+ASPRISE_OCR_URL = "http://ocr.asprise.com/api/v1/receipt"
+API_KEY = "TEST"
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,55 +44,62 @@ async def submit_form_data(
     logging.info("THIS IS RUNNING")
     return {"data": new_form_data.dict()}
 
-def clean_ocr_output(text):
-    # Remove any form feed characters
-    text = text.replace("\f", "")
-    
-    # Split text into lines and clean each line
-    lines = text.split("\n")
-    cleaned_lines = []
+def process_receipt_data(data: dict) -> dict:
+    # Assuming there's only one receipt for simplicity
+    receipt = data['receipts'][0]
 
-    for line in lines:
-        line = line.strip()  # Strip whitespace
-        
-        # Replace multiple spaces with single space
-        line = re.sub(r'\s+', ' ', line)
-        
-        # Only include lines with at least one alphabetic character (filter out lines that are just artifacts)
-        if re.search(r'[A-Za-z]', line):
-            cleaned_lines.append(line)
+    # Extract items
+    items = {item['description']: item['amount'] for item in receipt['items']}
 
-    # Join the cleaned lines back into a single string
-    cleaned_text = "\n".join(cleaned_lines)
-    
-    return cleaned_text
+    # Extract total
+    total = receipt['total']
+
+    # Use a default user_tip_percentage (you can change this as per your requirements)
+    user_tip_percentage = 10  # example value
+    tip = (user_tip_percentage / 100) * total
+
+    # To calculate tax, subtract the sum of item amounts and the tip from the total
+    tax = total - sum(items.values()) - tip
+
+    # Create a dictionary with the processed data
+    processed_data = {
+        "items": items,
+        "total": total,
+        "tax": tax,
+        "tip": tip
+    }
+
+    return processed_data
 
 # Takes an image file and returns its name
 @app.post("/receipt")
 async def upload_receipt(file: UploadFile = File(...)):
+    # Read the file contents
     contents = await file.read()
-    image = Image.open(io.BytesIO(contents))
-    raw_text = pytesseract.image_to_string(image)
-    cleaned_text = clean_ocr_output(raw_text)
-
-    # Convert newline characters to spaces for a more legible response
-    legible_text = cleaned_text.replace('\n', ' ').strip()
-
-    # Construct the data dictionary
-    data = {
-        "filename": file.filename,
-        "text": legible_text  # Use the legible_text here
+    
+    # Prepare data and headers for the request
+    headers = {
+        "Ocp-Apim-Subscription-Key": API_KEY,  # The API key header might differ, refer to the API documentation
+        # Add other headers as required by the API documentation
+    }
+    files = {
+        "file": (file.filename, contents)
     }
 
-    # Serialize the dictionary to a JSON string
-    json_str = json.dumps(data, indent=4)
+    # Make the request
+    response = requests.post(ASPRISE_OCR_URL, headers=headers, files=files)
 
-    # Define the name for the JSON file
-    json_filename = "output.json"
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Process the fetched data
+        processed_data = process_receipt_data(data)
 
-    # Write the JSON string to a file
-    with open(json_filename, 'w') as json_file:
-        json_file.write(json_str)
-    
-    # Return the legible text
-    return {"text": legible_text}
+        # Save the processed data to an output JSON file
+        with open("processed_output.json", "w") as json_file:
+            json.dump(processed_data, json_file, indent=4)
+        
+        return {"message": "Data processed and saved to processed_output.json", "data": processed_data}
+    else:
+        return {"error": "Failed to process the image", "details": response.text}

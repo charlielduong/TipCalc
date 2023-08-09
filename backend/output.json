@@ -1,4 +1,338 @@
 {
-    "filename": "Reciept.jpg",
-    "text": "See back of receipt for your chance te win $1000 1D #: 7N67YW147SP Walmart 2,<. 662-287-3148 Mar: BRENDA JOHNSON 2301 S HARPER RD CORINTH MS 38834 ST# 00105 oPp# 008614 TE# 76 TR# 00177 18 ALBUQUERQ 078832813450 15.00 X 18 ALBUQUERQ 078832813460 15.00 X OIL 2 CY160Z 084678100376 6.82 X TRIMMER LINE 002476102807 2.88 X RXEXPB16-1 007911840003 9.94 X RX EXP B22-1 007911840013 9.94 X YZ HANGERS 001864389303 1.00 X LUNCHBAG 007874207182 1.96 X YZ HANGERS 001864389303 1.00 X ANTHEM CRMR 004182007008 F 1.00 X FIREANT 007154902822 10.38 X ACCESSORY 008179610010 9.77 X HT H2510 TR 008493184732 74.00 X 2YRPROTECTPL 068113102039 6.00 T SUBTOTAL 164.69 TAX 1 7.000 % 11.63 TOTAL 176.22 DEBIT TEND 176.22 j CHANGE DUE 0.00 EFT DEBIT PAY FROM PRIMARY 176.22 TOTAL PURCHASE US DEBIT WHEE 4 HHH 0203 I 0 REF # 9159005494815 ae ID, 0069 APPR CODE 841303 fe AID A0000000042203 TC OFCD8A7B70ABFAFE *Pin Verified RMINAL # \u00a7C012031"
+    "ocr_type": "receipts",
+    "request_id": "P_138.88.45.162_ll40cwg0_tyc",
+    "file_name": "1_MLRlL9W69PMWAcTF-rV36Q.jpg",
+    "request_received_on": 1691602341697,
+    "success": true,
+    "image_width": 400,
+    "image_height": 1281,
+    "image_rotation": 0.009,
+    "recognition_completed_on": 1691602342108,
+    "receipts": [
+        {
+            "merchant_name": "SAFEWAY",
+            "merchant_address": null,
+            "merchant_phone": null,
+            "merchant_website": null,
+            "merchant_tax_reg_no": null,
+            "merchant_company_reg_no": null,
+            "region": null,
+            "mall": null,
+            "country": "US",
+            "receipt_no": null,
+            "date": null,
+            "time": null,
+            "items": [
+                {
+                    "amount": 5.0,
+                    "category": null,
+                    "description": "QTY FIBER ONE",
+                    "flags": " S",
+                    "qty": 2,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.0,
+                    "category": null,
+                    "description": "SFWY ZESTY DILL",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 1.5,
+                    "category": null,
+                    "description": "SS STONEGRND MSTRD",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.29,
+                    "category": null,
+                    "description": "S PASTA SAUCE",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 5.98,
+                    "category": null,
+                    "description": "QTY KLLGS CERE",
+                    "flags": " S",
+                    "qty": 2,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.29,
+                    "category": null,
+                    "description": "BUSHES BEST",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 0.69,
+                    "category": null,
+                    "description": "J MUFFIN MIX",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.49,
+                    "category": null,
+                    "description": "GHRDL CAB MATINEE",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.49,
+                    "category": null,
+                    "description": "OPN NAT CHPS VEGGI",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.69,
+                    "category": null,
+                    "description": "SILK PURE ALMOND",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 4.0,
+                    "category": null,
+                    "description": "QTY OPN NAT BR",
+                    "flags": " S",
+                    "qty": 2,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.99,
+                    "category": null,
+                    "description": "HRML NTRL CH CHERR",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 3.99,
+                    "category": null,
+                    "description": "HORMEL HAM SMOKED",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 1.99,
+                    "category": null,
+                    "description": "ORANGE BELL PEPPER",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.48,
+                    "category": null,
+                    "description": "WTNAVEL ORANGES",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 1.38,
+                    "category": null,
+                    "description": "WTBROCCOLI",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.5,
+                    "category": null,
+                    "description": "ORGNC BABY SPINA",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 2.5,
+                    "category": null,
+                    "description": "ORGNC BABY LETTU",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 7.99,
+                    "category": null,
+                    "description": "RANA PASTA",
+                    "flags": " S",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 5.99,
+                    "category": null,
+                    "description": "YELLOW TAIL SWEET",
+                    "flags": " T",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 0.1,
+                    "category": null,
+                    "description": "MR2 QTY DSPSBL BAG",
+                    "flags": " T",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 0.58,
+                    "category": null,
+                    "description": "TAX",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                },
+                {
+                    "amount": 72.91,
+                    "category": null,
+                    "description": "BALANCE",
+                    "flags": "",
+                    "qty": null,
+                    "remarks": null,
+                    "tags": null,
+                    "unitPrice": null
+                }
+            ],
+            "currency": "USD",
+            "total": 72.91,
+            "subtotal": null,
+            "tax": null,
+            "service_charge": null,
+            "tip": null,
+            "payment_method": null,
+            "payment_details": null,
+            "credit_card_type": null,
+            "credit_card_number": null,
+            "ocr_text": " SAFEWAY\n                 GROCERY\n           2 QTY FIBER ONE\n                             7.98 5.00 S Regular Price\n           Card Savings      2.98\n           2 QTY FIBER ONE        5.00 S\n           Regular Price     7.98\n           Card Savings      2.98\n           SFWY ZESTY DILL         2.00\n           Regular Price     2.99\n           Card Savings      0.99\n           SS STONEGRND MSTRD 1.50 S\n           Regular Price     1.99\n           Card Savings      0.49\n           S PASTA SAUCE          2.29 S\n           2 QTY KLLGS CERE       5.98 S\n           Regular Price     8.58\n           Card Savings      2.60\n           BUSHES BEST            2.29 S\n           Regular Price     2.59\n           Card Savings     0.30\n           J MUFFIN MIX\n                                  0.69 S\n           Resular Price    0.79\n           Card Savings      0.10\n           GHRDL CAB MATINEE       3.49 S\n           OPN NAT CHPS VEGGI      3.49 S\n               REFRIG/FROZEN\n           SILK PURE ALMOND        3.69 S\n                BAKED GOODS\n           2 QTY OPN NAT BR        4.00 S\n           Regular Price     4.98\n           Card Savings     0.98\n                    MEAT\n           HRML NTRL CH CHERR.     3.99 S\n          Regular Price      4.49\n          Card Savings       0.50\n           HORMEL HAM SMOKED 3.99 S\n          Regular Price      4.49\n          Card Savings       0.50\n                 PRODUCE\n          ORANGE BELL PEPPER       1.99 S\n  2.51 lb @ $0.99 /lb\n WT       NAVEL ORANGES           2.48 S\n          Regular Price      3.24\n          Card Savings       0.76\n  0.77 lb @ $1.79 /lb\n WT      BROCCOLI                 1.38 S\n            ORGNC BABY SPINA.      2.50 S\n         Regular Price       3.29\n         Card Savings       0.79\n            ORGNC BABY LETTU       2.50 S\n         Regular Price       3.29\n         Card Savings       0.79\n                   DELI\n         RANA PASTA\n                                   7.99 S\n                 LIQUOR\n         YELLOW TAIL SWEET 5.99 T\n         Regular Price       7.99\n         Card Savings        2.00\n             MISCELLANEOUS\n MR      2 QTY DSPSBL BAG          0.10 T\n         TAX                       0.58\n   **** BALANCE                   72.91",
+            "ocr_confidence": 95.53,
+            "width": 285,
+            "height": 1241,
+            "avg_char_width": 6.9186,
+            "avg_line_height": 11.242,
+            "conf_amount": 74,
+            "source_locations": {
+                "total": [
+                    [
+                        {
+                            "y": 1261,
+                            "x": 278
+                        },
+                        {
+                            "y": 1261,
+                            "x": 315
+                        },
+                        {
+                            "y": 1272,
+                            "x": 315
+                        },
+                        {
+                            "y": 1272,
+                            "x": 278
+                        }
+                    ]
+                ],
+                "merchant_name": [
+                    [
+                        {
+                            "y": 32,
+                            "x": 58
+                        },
+                        {
+                            "y": 52,
+                            "x": 262
+                        },
+                        {
+                            "y": 93,
+                            "x": 258
+                        },
+                        {
+                            "y": 73,
+                            "x": 54
+                        }
+                    ]
+                ],
+                "doc": [
+                    [
+                        {
+                            "y": -28,
+                            "x": 43
+                        },
+                        {
+                            "y": -25,
+                            "x": 357
+                        },
+                        {
+                            "y": 1340,
+                            "x": 345
+                        },
+                        {
+                            "y": 1337,
+                            "x": 31
+                        }
+                    ]
+                ]
+            }
+        }
+    ]
 }

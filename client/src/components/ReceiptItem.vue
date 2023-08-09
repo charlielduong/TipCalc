@@ -4,7 +4,13 @@
 
         <h2>Upload Image</h2>
         <input type="file" @change="onFileChange">
+        
+        <!-- Image preview -->
 
+        <div v-if="imageSrc">
+            <img :src="imageSrc" alt="Image Preview" />
+        </div>
+        
         <button @click="submitImage">Submit</button>
     </div>
 </template>
@@ -13,12 +19,20 @@
 export default {
     data() {
         return {
-            imageFile: null
+            imageFile: null,
+            imageSrc: null
         }
     },
     methods: {
         onFileChange(e) {
             this.imageFile = e.target.files[0];
+
+            // Preview the uploaded image
+            const reader = new FileReader();
+            reader.onload = e => {
+                this.imageSrc = e.target.result;
+            };
+            reader.readAsDataURL(this.imageFile);
         },
         submitImage() {
             // Get the base URL of the server
@@ -48,5 +62,10 @@ export default {
 </script>
 
 <style>
-/* Add your styles here */
+    img {
+        max-width: 300px;
+        max-height: 300px;
+        display: block;
+        margin-top: 15px;
+    }
 </style>
