@@ -40,6 +40,11 @@
 
         <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
             <h3>Summary</h3>
+
+            <div v-for="(person, index) in combinedLists" :key="index">
+                <p>{{combinedLists[index][0]}} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</p>
+            </div>
+            <p></p>
             <p>Sub-Total: {{ this.calculateSubTotal }}</p>
             <p>Tip: {{ this.calculateTip }}</p>
             <p>Tax: {{ this.calculateTax }}</p>
@@ -118,7 +123,10 @@ export default {
         },
         calculateTax() {
             return (this.calculateSubTotal * (this.tax * .01)).toFixed(2).padEnd(4, '0')
-            //Used to wrap this w/ Number(return statement) to reeturn this as a number instead of string
+            //Used to wrap this w/ Number(return statement) to return this as a number instead of string
+        },
+        combinedLists() {
+            return this.listOfPeople.map((person, index) => [person, this.listOfAmounts[index]])
         }
     },
     methods: {
@@ -137,6 +145,10 @@ export default {
                 this.showFirstForm = false;
                 this.showSecondForm = true;
             }
+        },
+        calculateTipTax(itemAmount){
+            let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
+            return output.toFixed(2).padEnd(4, '0')
         }
     }
 
