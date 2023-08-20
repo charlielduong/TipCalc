@@ -20,11 +20,19 @@
         <form @submit.prevent="submitForm" v-if="showSecondForm">
             <!-- Second form using input values from the first form -->
             <h2>Second Form</h2>
-            <div v-for="(person, index) in listOfPeople" :key="index">
+            <!-- <div v-for="(person, index) in listOfPeople" :key="index">
                 <label>{{ listOfPeople[index] }}'s Amount: </label>
                 <input type="number" step="0.01" v-model="listOfAmounts[index]" required>
             </div>
-            <button type="submit">Next</button>
+            <button type="submit">Next</button> -->
+            <div>
+                <input v-model="newString" placeholder="Enter a string" />
+                <button type="button" @click="addItem">Add</button>
+                <button @click="submitForm">Done</button>
+                <ul>
+                    <li v-for="(string, index) in stringList" :key="index">{{ string }}</li>
+                </ul>
+            </div>
         </form>
 
         <form @submit.prevent="submitForm" v-if="showThirdForm">
@@ -42,13 +50,59 @@
             <h3>Summary</h3>
 
             <div v-for="(person, index) in combinedLists" :key="index">
-                <p>{{combinedLists[index][0]}} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</p>
+                <p>{{ combinedLists[index][0] }} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</p>
             </div>
             <p></p>
             <p>Sub-Total: {{ this.calculateSubTotal }}</p>
             <p>Tip: {{ this.calculateTip }}</p>
             <p>Tax: {{ this.calculateTax }}</p>
             <p>Total: {{ this.calculateTotal }}</p>
+
+            <div id="showScroll" class="container">
+                <div class="receipt">
+                    <h1 class="logo">I PAID FOR MY FRIENDS</h1>
+                    <div class="address">
+                        2920 District Ave, Fairfax VA
+                    </div>
+                    <div class="transactionDetails">
+                        Helped by: Duong
+                    </div>
+                    <div class="centerItem bold">
+                        <div class="item">Hong&Duong Card #: *********1875</div>
+                    </div>
+                    <div class="transactionDetails">
+                        <div class="detail">1</div>
+                        <div class="detail">ITEM ONE</div>
+                        <div class="detail">3.99</div>
+                    </div>
+                    <div class="transactionDetails">
+                        <div class="detail">2</div>
+                        <div class="detail">ITEM TWO BUT WITH A REALLY LONG NAME</div>
+                        <div class="detail">7.49</div>
+                    </div>
+                    <div class="transactionDetails">
+                        <div class="detail">1</div>
+                        <div class="detail">ITEM NUMBER THREE</div>
+                        <div class="detail">5.00</div>
+                    </div>
+                    <div class="paymentDetails bold">
+                        <div class="detail">SUBTOTAL</div>
+                        <div class="detail">3.99</div>
+                    </div>
+                    <div class="paymentDetails">
+                        <div class="detail">TIP</div>
+                        <div class="detail">3.99</div>
+                    </div>
+                    <div class="paymentDetails">
+                        <div class="detail">TAX</div>
+                        <div class="detail">3.99</div>
+                    </div>
+                    <div class="paymentDetails bold">
+                        <div class="detail">TOTAL</div>
+                        <div class="detail">3.99</div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -108,7 +162,9 @@ export default {
             showSecondForm: false,
             showThirdForm: false,
             tip: 0,
-            tax: 0
+            tax: 0,
+            newString: '',     // Input field bound to the new string
+            stringList: []     // List to store the entered strings
         }
     },
     computed: {
@@ -146,9 +202,20 @@ export default {
                 this.showSecondForm = true;
             }
         },
-        calculateTipTax(itemAmount){
+        calculateTipTax(itemAmount) {
             let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
             return output.toFixed(2).padEnd(4, '0')
+        },
+        addItem() {
+            if (this.newString.trim() !== '') {
+                this.stringList.push(this.newString);
+                this.newString = ''; // Clear the input field
+            }
+        },
+        completeForm() {
+            // You can perform any actions needed to mark the form as completed here
+            // For example, you might want to submit the form data to a server
+            console.log("Form completed!");
         }
     }
 
