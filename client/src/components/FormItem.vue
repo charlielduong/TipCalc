@@ -36,15 +36,26 @@
         </form>
 
         <form @submit.prevent="submitForm" v-if="showThirdForm">
-            <!-- Third form using input values from the first form -->
+
             <h2>Third Form</h2>
-            <label>Tip %: </label>
-            <input type="number" step="0.01" v-model="tip" required>
-            <label>Tax %: </label>
-            <input type="number" step="0.01" v-model="tax" required>
+            <div>
+                <ul>
+                    <li v-for="(string, index) in stringList" :key="index">{{ string }}</li>
+                </ul>
+            </div>
 
             <button type="submit">Submit</button>
         </form>
+
+        <!-- <form @submit.prevent="submitForm" v-if="showThirdForm">
+                <h2>Third Form</h2>
+                <label>Tip %: </label>
+                <input type="number" step="0.01" v-model="tip" required>
+                <label>Tax %: </label>
+                <input type="number" step="0.01" v-model="tax" required>
+
+                <button type="submit">Submit</button>
+            </form> -->
 
         <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
             <h3>Summary</h3>
@@ -211,11 +222,6 @@ export default {
                 this.stringList.push(this.newString);
                 this.newString = ''; // Clear the input field
             }
-        },
-        completeForm() {
-            // You can perform any actions needed to mark the form as completed here
-            // For example, you might want to submit the form data to a server
-            console.log("Form completed!");
         }
     }
 
