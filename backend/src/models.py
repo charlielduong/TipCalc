@@ -2,7 +2,11 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class FormItem(BaseModel):
-    label: Optional[str]
-    type: Optional[str]
-    value: Optional[str]  
+    people: list[str]
+    numOfPeople: int
+    amountDue: list[float]
+    tip: float
+    tax: float
 
+class ReceiptReaderItem(BaseModel):
+    imagepath: str
