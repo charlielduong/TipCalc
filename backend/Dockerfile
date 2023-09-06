@@ -19,5 +19,6 @@ ENV PYTHONPATH=.
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
 # Copy the source code into the Docker image
 COPY src/ .

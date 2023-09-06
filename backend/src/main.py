@@ -9,11 +9,18 @@ import pytesseract
 import json
 import re
 import requests
+from pymongo import MongoClient
+import os
 
 app = FastAPI()
 
 ASPRISE_OCR_URL = "http://ocr.asprise.com/api/v1/receipt"
-API_KEY = "TEST"
+API_KEY = os.getenv("API_KEY")
+
+client = MongoClient("mongodb://your_mongo_server_address:27017/")
+db = client["your_database_name"]
+collection = db["your_collection_name"]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -96,6 +103,9 @@ async def upload_receipt(file: UploadFile = File(...)):
         # Process the fetched data
         processed_data = process_receipt_data(data)
 
+        # Store the processed data in MongoDB
+        collection.insert_one(processed_data)
+
         # Save the processed data to an output JSON file
         with open("processed_output.json", "w") as json_file:
             json.dump(processed_data, json_file, indent=4)
@@ -103,3 +113,10 @@ async def upload_receipt(file: UploadFile = File(...)):
         return {"message": "Data processed and saved to processed_output.json", "data": processed_data}
     else:
         return {"error": "Failed to process the image", "details": response.text}
+
+@app.get("/receipts")
+async def get_all_receipts():
+    receipts = list(collection.find())
+    for receipt in receipts:
+        receipt["_id"] = str(receipt["_id"])  # Convert ObjectId() to string
+    return receipts
