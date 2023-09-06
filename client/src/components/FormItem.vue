@@ -35,13 +35,33 @@
             </div>
         </form>
 
-        <form @submit.prevent="submitForm" v-if="showThirdForm">
+        <!-- <form @submit.prevent="submitForm" v-if="showThirdForm">
 
             <h2>Third Form</h2>
             <div>
                 <ul>
                     <li v-for="(string, index) in stringList" :key="index">{{ string }}</li>
                 </ul>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form> -->
+
+        <form @submit.prevent="submitForm" v-if="showThirdForm">
+            <h2>Third Form</h2>
+
+            <!-- Draggable People -->
+            <div class="draggable-container">
+                <draggable v-model="draggablePeople" :element="'ul'" :options="{ group: 'people', animation: 150 }">
+                    <li v-for="(person, index) in listOfPeople" :key="index">{{ person }}</li>
+                </draggable>
+            </div>
+
+            <!-- Droppable Items -->
+            <div class="droppable-container">
+                <div v-for="(item, index) in stringList" :key="index" class="droppable-item" @drop="onDrop(index)">
+                    {{ item }}
+                </div>
             </div>
 
             <button type="submit">Submit</button>
@@ -163,7 +183,12 @@ label {
 </style>
 
 <script>
+import draggable from 'vuedraggable';  // Import the vuedraggable component here
+
 export default {
+    components: {
+        draggable  // Use the imported component here
+    },
     data() {
         return {
             numberOfPeople: null,
@@ -175,7 +200,8 @@ export default {
             tip: 0,
             tax: 0,
             newString: '',     // Input field bound to the new string
-            stringList: []     // List to store the entered strings
+            stringList: [],     // List to store the entered strings
+            draggablePeople: [], // List of draggable people
         }
     },
     computed: {
@@ -222,6 +248,12 @@ export default {
                 this.stringList.push(this.newString);
                 this.newString = ''; // Clear the input field
             }
+        },
+        onDrop(index) {
+            // Handle the drop event when a person is dropped onto an item
+            // Here, you can associate the person with the dropped item
+            // For example, you might want to update the stringList with the person's name
+            this.stringList[index] = this.draggablePeople[0];
         }
     }
 
