@@ -4,34 +4,34 @@
             <label for="numberOfPeople">Number of people splitting the bill</label>
 
             <!-- Start form -->
-            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" required>
+            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" max="20" required>
 
             <template v-if="numberOfPeople">
                 <div v-for="index in numberOfPeople" :key="index">
                     <label>Person {{ index }} name:</label>
-                    <input type="text" v-model="listOfPeople[index - 1]" required>
+                    <input type="text" v-model="listOfPeople[index - 1].name" placeholder="Enter person's name" required>
                 </div>
 
             </template>
 
+            <button type="button" @click="resetForm">Reset</button>
             <button type="submit">Next</button>
         </form>
 
         <form @submit.prevent="submitForm" v-if="showSecondForm">
-            <!-- Second form using input values from the first form -->
             <h2>Second Form</h2>
-            <!-- <div v-for="(person, index) in listOfPeople" :key="index">
-                <label>{{ listOfPeople[index] }}'s Amount: </label>
-                <input type="number" step="0.01" v-model="listOfAmounts[index]" required>
-            </div>
-            <button type="submit">Next</button> -->
+
             <div>
-                <input v-model="newString" placeholder="Enter a string" />
-                <button type="button" @click="addItem">Add</button>
+                <!-- Fields to add a new item -->
+                <input v-model="newItemName" placeholder="Enter item name" />
+                <input type="number" v-model.number="newItemCost" placeholder="Enter item cost" />
+
+                <div v-for="index in items" :key="index">
+                    <label>{{ index }}</label>
+                </div>
+                <button type="button" @click="addItem">Add Item</button>
+                
                 <button @click="submitForm">Done</button>
-                <ul>
-                    <li v-for="(string, index) in stringList" :key="index">{{ string }}</li>
-                </ul>
             </div>
         </form>
 
@@ -50,20 +50,25 @@
         <form @submit.prevent="submitForm" v-if="showThirdForm">
             <h2>Third Form</h2>
 
-            <!-- Draggable People -->
             <div class="draggable-container">
-                <draggable v-model="draggablePeople" :element="'ul'" :options="{ group: 'people', animation: 150 }">
-                    <li v-for="(person, index) in listOfPeople" :key="index">{{ person }}</li>
+                <!-- Items Area (Left Side) -->
+                <draggable v-model="items" :group="{ name: 'items', pull: 'clone', put: false }" tag="ul" class="items">
+                    <template #item="{ element }">
+                        <li class="draggable-item">{{ element.name }} - ${{ element.cost.toFixed(2) }}</li>
+                    </template>
                 </draggable>
-            </div>
-
-            <!-- Droppable Items -->
-            <div class="droppable-container">
-                <div v-for="(item, index) in stringList" :key="index" class="droppable-item" @drop="onDrop(index)">
-                    {{ item }}
+                
+                <!-- People Area (Right Side) -->
+                <div class="people-container">
+                    <div v-for="(person, index) in listOfPeople" :key="index" class="person-drop-zone" @drop.prevent="handleDrop($event, person)" @dragover.prevent>
+                        <p>{{ person.name }}</p>
+                        <ul>
+                            <li v-for="item in person.items" :key="item.id">{{ item.name }} - ${{ item.cost.toFixed(2) }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
+            
             <button type="submit">Submit</button>
         </form>
 
@@ -180,28 +185,77 @@ label {
     outline: none;
     border-bottom: 1px solid #000;
 }
+
+.draggable-container {
+    display: flex;
+    gap: 20px;
+}
+
+.items {
+    flex: 1;
+    min-height: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.draggable-item {
+    margin: 5px 0;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.people-container {
+    flex: 1;
+}
+
+.person-drop-zone {
+    border: 1px dashed #ccc;
+    margin: 5px 0;
+    padding: 10px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+    min-height: 100px;
+    position: relative;
+}
 </style>
 
 <script>
 import draggable from 'vuedraggable';  // Import the vuedraggable component here
+import { Person } from './People.js';
+import Item from './Item.js';
 
 export default {
+    name: 'DragDropForm',
     components: {
         draggable  // Use the imported component here
     },
     data() {
         return {
-            numberOfPeople: null,
-            listOfPeople: [],
-            listOfAmounts: [],
-            showFirstForm: true,
-            showSecondForm: false,
-            showThirdForm: false,
-            tip: 0,
-            tax: 0,
-            newString: '',     // Input field bound to the new string
-            stringList: [],     // List to store the entered strings
-            draggablePeople: [], // List of draggable people
+        draggablePeople: [],
+        listOfPeople: [],
+        stringList: [],
+        numberOfPeople: null,
+        listOfAmounts: [],
+        showFirstForm: true,
+        showSecondForm: false,
+        showThirdForm: false,
+        tip: 0,
+        tax: 0,
+        newString: '',
+        newItemName: '',  // For the name of the new item
+        newItemCost: 0,   // For the cost of the new item
+        items: [],
+        };
+    },
+    watch: {
+        numberOfPeople(newVal, oldVal) {
+        if (newVal > oldVal) {
+            for (let i = oldVal; i < newVal; i++) {
+            this.listOfPeople.push({ name: '' });
+            }
+        } else {
+            this.listOfPeople = this.listOfPeople.slice(0, newVal);
+        }
         }
     },
     computed: {
@@ -225,7 +279,7 @@ export default {
     methods: {
         submitForm() {
             if (this.showSecondForm) {
-                console.log(this.listOfAmounts)
+                console.log(this.items)
                 this.showSecondForm = false;
                 this.showThirdForm = true;
             } else if (this.showThirdForm) {
@@ -243,20 +297,25 @@ export default {
             let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
             return output.toFixed(2).padEnd(4, '0')
         },
+        resetForm(){
+            this.numberOfPeople = null;
+            this.listOfPeople = [];
+        },
         addItem() {
-            if (this.newString.trim() !== '') {
-                this.stringList.push(this.newString);
-                this.newString = ''; // Clear the input field
+            if (this.newItemName.trim() !== '') {
+                const newItem = new Item(this.newItemName, this.newItemCost);
+                this.items.push(newItem);
+                console.log(this.items);
+                this.newItemName = '';
+                this.newItemCost = 0;
             }
         },
-        onDrop(index) {
-            // Handle the drop event when a person is dropped onto an item
-            // Here, you can associate the person with the dropped item
-            // For example, you might want to update the stringList with the person's name
-            this.stringList[index] = this.draggablePeople[0];
+        handleDrop(event, person) {
+        const itemData = (event.dataTransfer.getData("Text"));
+        console.log(person.name + " got " + itemData);
+        person.items.push(itemData);
         }
     }
-
 }
 
 </script>
