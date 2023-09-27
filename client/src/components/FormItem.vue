@@ -30,35 +30,24 @@
                     <label>{{ index }}</label>
                 </div>
                 <button type="button" @click="addItem">Add Item</button>
-                
+
                 <button @click="submitForm">Done</button>
             </div>
         </form>
 
-        <!-- <form @submit.prevent="submitForm" v-if="showThirdForm">
-
-            <h2>Third Form</h2>
-            <div>
-                <ul>
-                    <li v-for="(string, index) in stringList" :key="index">{{ string }}</li>
-                </ul>
-            </div>
-
-            <button type="submit">Submit</button>
-        </form> -->
-
         <form @submit.prevent="submitForm" v-if="showThirdForm">
             <h2>Third Form</h2>
 
-            <div class="draggable-container">
-                <!-- Items Area (Left Side) -->
+            <div v-for="index in items" :key="index">
+                <label>{{ index }}</label>
+            </div>
+            <!-- <div class="draggable-container">
                 <draggable v-model="items" :group="{ name: 'items', pull: 'clone', put: false }" tag="ul" class="items">
                     <template #item="{ element }">
                         <li class="draggable-item">{{ element.name }} - ${{ element.cost.toFixed(2) }}</li>
                     </template>
                 </draggable>
                 
-                <!-- People Area (Right Side) -->
                 <div class="people-container">
                     <div v-for="(person, index) in listOfPeople" :key="index" class="person-drop-zone" @drop.prevent="handleDrop($event, person)" @dragover.prevent>
                         <p>{{ person.name }}</p>
@@ -67,8 +56,22 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-            
+            </div> -->
+
+            <!-- <div class="draggable-container">
+
+                <div class="people-container">
+                    <div v-for="(person, index) in listOfPeople" :key="index" class="person-drop-zone"
+                        @drop.prevent="handleDrop($event, person)" @dragover.prevent>
+                        <p>{{ person.name }}</p>
+                        <ul>
+                            <li v-for="item in person.items" :key="item.id">{{ item.name }} - ${{ item.cost.toFixed(2) }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div> -->
+
             <button type="submit">Submit</button>
         </form>
 
@@ -231,31 +234,31 @@ export default {
     },
     data() {
         return {
-        draggablePeople: [],
-        listOfPeople: [],
-        stringList: [],
-        numberOfPeople: null,
-        listOfAmounts: [],
-        showFirstForm: true,
-        showSecondForm: false,
-        showThirdForm: false,
-        tip: 0,
-        tax: 0,
-        newString: '',
-        newItemName: '',  // For the name of the new item
-        newItemCost: 0,   // For the cost of the new item
-        items: [],
+            draggablePeople: [],
+            listOfPeople: [],
+            stringList: [],
+            numberOfPeople: null,
+            listOfAmounts: [],
+            showFirstForm: true,
+            showSecondForm: false,
+            showThirdForm: false,
+            tip: 0,
+            tax: 0,
+            newString: '',
+            newItemName: '',  // For the name of the new item
+            newItemCost: 0,   // For the cost of the new item
+            items: [],
         };
     },
     watch: {
         numberOfPeople(newVal, oldVal) {
-        if (newVal > oldVal) {
-            for (let i = oldVal; i < newVal; i++) {
-            this.listOfPeople.push({ name: '' });
+            if (newVal > oldVal) {
+                for (let i = oldVal; i < newVal; i++) {
+                    this.listOfPeople.push({ name: '' });
+                }
+            } else {
+                this.listOfPeople = this.listOfPeople.slice(0, newVal);
             }
-        } else {
-            this.listOfPeople = this.listOfPeople.slice(0, newVal);
-        }
         }
     },
     computed: {
@@ -297,7 +300,7 @@ export default {
             let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
             return output.toFixed(2).padEnd(4, '0')
         },
-        resetForm(){
+        resetForm() {
             this.numberOfPeople = null;
             this.listOfPeople = [];
         },
@@ -311,9 +314,9 @@ export default {
             }
         },
         handleDrop(event, person) {
-        const itemData = (event.dataTransfer.getData("Text"));
-        console.log(person.name + " got " + itemData);
-        person.items.push(itemData);
+            const itemData = (event.dataTransfer.getData("Text"));
+            console.log(person.name + " got " + itemData);
+            person.items.push(itemData);
         }
     }
 }
