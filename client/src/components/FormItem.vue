@@ -1,6 +1,6 @@
 <template>
     <div class="form-container">
-        <form @submit.prevent="submitForm" v-if="showFirstForm">
+        <form class="first-form" @submit.prevent="submitForm" v-if="showFirstForm">
             <label for="numberOfPeople">Number of people splitting the bill</label>
 
             <!-- Start form -->
@@ -18,7 +18,7 @@
             <button type="submit">Next</button>
         </form>
 
-        <form @submit.prevent="submitForm" v-if="showSecondForm">
+        <form class="second-form" @submit.prevent="submitForm" v-if="showSecondForm">
             <h2>Second Form</h2>
 
             <div>
@@ -34,116 +34,21 @@
                 <button @click="submitForm">Done</button>
             </div>
         </form>
-
-        <form @submit.prevent="submitForm" v-if="showThirdForm">
+        <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
             <h2>Third Form</h2>
 
-            <div v-for="index in items" :key="index">
+            <div class="items-list" v-for="index in items" :key="index">
                 <label>{{ index }}</label>
             </div>
-            <!-- <div class="draggable-container">
-                <draggable v-model="items" :group="{ name: 'items', pull: 'clone', put: false }" tag="ul" class="items">
-                    <template #item="{ element }">
-                        <li class="draggable-item">{{ element.name }} - ${{ element.cost.toFixed(2) }}</li>
-                    </template>
-                </draggable>
-                
-                <div class="people-container">
-                    <div v-for="(person, index) in listOfPeople" :key="index" class="person-drop-zone" @drop.prevent="handleDrop($event, person)" @dragover.prevent>
-                        <p>{{ person.name }}</p>
-                        <ul>
-                            <li v-for="item in person.items" :key="item.id">{{ item.name }} - ${{ item.cost.toFixed(2) }}</li>
-                        </ul>
-                    </div>
+
+            <!-- Persons Buttons on the Right -->
+            <div class="persons-buttons">
+                <div v-for="(person, index) in combinedLists" :key="index">
+                    <button>{{ combinedLists[index][0] }} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</button>
                 </div>
-            </div> -->
+            </div>
 
-            <!-- <div class="draggable-container">
-
-                <div class="people-container">
-                    <div v-for="(person, index) in listOfPeople" :key="index" class="person-drop-zone"
-                        @drop.prevent="handleDrop($event, person)" @dragover.prevent>
-                        <p>{{ person.name }}</p>
-                        <ul>
-                            <li v-for="item in person.items" :key="item.id">{{ item.name }} - ${{ item.cost.toFixed(2) }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
-
-            <button type="submit">Submit</button>
         </form>
-
-        <!-- <form @submit.prevent="submitForm" v-if="showThirdForm">
-                <h2>Third Form</h2>
-                <label>Tip %: </label>
-                <input type="number" step="0.01" v-model="tip" required>
-                <label>Tax %: </label>
-                <input type="number" step="0.01" v-model="tax" required>
-
-                <button type="submit">Submit</button>
-            </form> -->
-
-        <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
-            <h3>Summary</h3>
-
-            <div v-for="(person, index) in combinedLists" :key="index">
-                <p>{{ combinedLists[index][0] }} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</p>
-            </div>
-            <p></p>
-            <p>Sub-Total: {{ this.calculateSubTotal }}</p>
-            <p>Tip: {{ this.calculateTip }}</p>
-            <p>Tax: {{ this.calculateTax }}</p>
-            <p>Total: {{ this.calculateTotal }}</p>
-
-            <div id="showScroll" class="container">
-                <div class="receipt">
-                    <h1 class="logo">I PAID FOR MY FRIENDS</h1>
-                    <div class="address">
-                        2920 District Ave, Fairfax VA
-                    </div>
-                    <div class="transactionDetails">
-                        Helped by: Duong
-                    </div>
-                    <div class="centerItem bold">
-                        <div class="item">Hong&Duong Card #: *********1875</div>
-                    </div>
-                    <div class="transactionDetails">
-                        <div class="detail">1</div>
-                        <div class="detail">ITEM ONE</div>
-                        <div class="detail">3.99</div>
-                    </div>
-                    <div class="transactionDetails">
-                        <div class="detail">2</div>
-                        <div class="detail">ITEM TWO BUT WITH A REALLY LONG NAME</div>
-                        <div class="detail">7.49</div>
-                    </div>
-                    <div class="transactionDetails">
-                        <div class="detail">1</div>
-                        <div class="detail">ITEM NUMBER THREE</div>
-                        <div class="detail">5.00</div>
-                    </div>
-                    <div class="paymentDetails bold">
-                        <div class="detail">SUBTOTAL</div>
-                        <div class="detail">3.99</div>
-                    </div>
-                    <div class="paymentDetails">
-                        <div class="detail">TIP</div>
-                        <div class="detail">3.99</div>
-                    </div>
-                    <div class="paymentDetails">
-                        <div class="detail">TAX</div>
-                        <div class="detail">3.99</div>
-                    </div>
-                    <div class="paymentDetails bold">
-                        <div class="detail">TOTAL</div>
-                        <div class="detail">3.99</div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </div>
 </template>
 
@@ -158,68 +63,32 @@
 
 form {
     display: flex;
-    flex-direction: column;
     max-width: 400px;
-    width: 100%;
+    width: 400px;
     padding: 20px;
     border: 1px solid #000;
 }
 
-.form-field {
-    margin-bottom: 10px;
+.first-form {
+    flex-direction: column;
 }
 
-label {
-    font-size: 14px;
-    color: #000;
+.second-form {
+    flex-direction: column;
 }
 
-.form-input {
-    border: none;
-    background-color: transparent;
-    border-bottom: 1px solid #000;
-    padding: 5px 0;
-    font-size: 16px;
-    color: #000;
-    width: 100%;
+.third-form{
+    flex-direction:row;
 }
 
-.form-input:focus {
-    outline: none;
-    border-bottom: 1px solid #000;
+.items-list {
+    width: 40%; /* take up remaining space */
 }
 
-.draggable-container {
-    display: flex;
-    gap: 20px;
+.persons-buttons {
+    width: 40%; /* take up remaining space */
 }
 
-.items {
-    flex: 1;
-    min-height: 200px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-}
-
-.draggable-item {
-    margin: 5px 0;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.people-container {
-    flex: 1;
-}
-
-.person-drop-zone {
-    border: 1px dashed #ccc;
-    margin: 5px 0;
-    padding: 10px;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-    min-height: 100px;
-    position: relative;
-}
 </style>
 
 <script>
