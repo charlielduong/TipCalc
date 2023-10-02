@@ -35,16 +35,14 @@
             </div>
         </form>
         <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
-            <h2>Third Form</h2>
-
             <div class="items-list" v-for="index in items" :key="index">
-                <label>{{ index }}</label>
+                <label>{{ index.display() }}</label>
             </div>
 
             <!-- Persons Buttons on the Right -->
-            <div class="persons-buttons">
-                <div v-for="(person, index) in combinedLists" :key="index">
-                    <button>{{ combinedLists[index][0] }} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</button>
+            <div class="name-buttons">
+                <div v-for="person in numberOfPeople" :key="index">
+                    <button type="button" @click="addToPerson">{{ person }}</button>
                 </div>
             </div>
 
@@ -81,29 +79,23 @@ form {
     flex-direction:row;
 }
 
-.items-list {
+.items-list {   
     width: 40%; /* take up remaining space */
 }
 
-.persons-buttons {
+.name-buttons {
     width: 40%; /* take up remaining space */
 }
 
 </style>
 
 <script>
-import draggable from 'vuedraggable';  // Import the vuedraggable component here
-import { Person } from './People.js';
+import { Person } from './People';
 import Item from './Item.js';
 
 export default {
-    name: 'DragDropForm',
-    components: {
-        draggable  // Use the imported component here
-    },
     data() {
         return {
-            draggablePeople: [],
             listOfPeople: [],
             stringList: [],
             numberOfPeople: null,
@@ -117,6 +109,7 @@ export default {
             newItemName: '',  // For the name of the new item
             newItemCost: 0,   // For the cost of the new item
             items: [],
+            mainItem: null
         };
     },
     watch: {
@@ -128,6 +121,15 @@ export default {
             } else {
                 this.listOfPeople = this.listOfPeople.slice(0, newVal);
             }
+        },
+        items:{
+            immediate: true,  // This ensures the handler gets called immediately upon registration
+            handler(newValue) {
+            if (newValue.length > 0) {
+                this.mainItem = newValue[0];
+                (console.log(this.mainItem));
+            }
+        }
         }
     },
     computed: {
@@ -182,10 +184,8 @@ export default {
                 this.newItemCost = 0;
             }
         },
-        handleDrop(event, person) {
-            const itemData = (event.dataTransfer.getData("Text"));
-            console.log(person.name + " got " + itemData);
-            person.items.push(itemData);
+        personButton(){
+
         }
     }
 }
