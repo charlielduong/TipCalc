@@ -1,56 +1,52 @@
 <template>
     <div class="form-container">
-        <form @submit.prevent="submitForm" v-if="showFirstForm">
+        <form class="first-form" @submit.prevent="submitForm" v-if="showFirstForm">
             <label for="numberOfPeople">Number of people splitting the bill</label>
 
             <!-- Start form -->
-            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" required>
+            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" max="20" required>
 
             <template v-if="numberOfPeople">
                 <div v-for="index in numberOfPeople" :key="index">
                     <label>Person {{ index }} name:</label>
-                    <input type="text" v-model="listOfPeople[index - 1]" required>
+                    <input type="text" v-model="listOfPeople[index - 1].name" placeholder="Enter person's name" required>
                 </div>
 
             </template>
 
+            <button type="button" @click="resetForm">Reset</button>
             <button type="submit">Next</button>
         </form>
 
-        <form @submit.prevent="submitForm" v-if="showSecondForm">
-            <!-- Second form using input values from the first form -->
+        <form class="second-form" @submit.prevent="submitForm" v-if="showSecondForm">
             <h2>Second Form</h2>
-            <div v-for="(person, index) in listOfPeople" :key="index">
-                <label>{{ listOfPeople[index] }}'s Amount: </label>
-                <input type="number" step="0.01" v-model="listOfAmounts[index]" required>
+
+            <div>
+                <!-- Fields to add a new item -->
+                <input v-model="newItemName" placeholder="Enter item name" />
+                <input type="number" v-model.number="newItemCost" placeholder="Enter item cost" />
+
+                <div v-for="index in items" :key="index">
+                    <label>{{ index }}</label>
+                </div>
+                <button type="button" @click="addItem">Add Item</button>
+
+                <button @click="submitForm">Done</button>
             </div>
-            <button type="submit">Next</button>
         </form>
-
-        <form @submit.prevent="submitForm" v-if="showThirdForm">
-            <!-- Third form using input values from the first form -->
-            <h2>Third Form</h2>
-            <label>Tip %: </label>
-            <input type="number" step="0.01" v-model="tip" required>
-            <label>Tax %: </label>
-            <input type="number" step="0.01" v-model="tax" required>
-
-            <button type="submit">Submit</button>
-        </form>
-
-        <div v-if="!showFirstForm && !showSecondForm && !showThirdForm">
-            <h3>Summary</h3>
-
-            <div v-for="(person, index) in combinedLists" :key="index">
-                <p>{{combinedLists[index][0]}} owes ${{ this.calculateTipTax(combinedLists[index][1]) }}</p>
+        <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
+            <div class="items-list" v-for="index in items" :key="index">
+                <label>{{ index.display() }}</label>
             </div>
-            <p></p>
-            <p>Sub-Total: {{ this.calculateSubTotal }}</p>
-            <p>Tip: {{ this.calculateTip }}</p>
-            <p>Tax: {{ this.calculateTax }}</p>
-            <p>Total: {{ this.calculateTotal }}</p>
 
-        </div>
+            <!-- Persons Buttons on the Right -->
+            <div class="name-buttons">
+                <div v-for="person in numberOfPeople" :key="index">
+                    <button type="button" @click="addToPerson">{{ person }}</button>
+                </div>
+            </div>
+
+        </form>
     </div>
 </template>
 
@@ -65,50 +61,75 @@
 
 form {
     display: flex;
-    flex-direction: column;
     max-width: 400px;
-    width: 100%;
+    width: 400px;
     padding: 20px;
     border: 1px solid #000;
 }
 
-.form-field {
-    margin-bottom: 10px;
+.first-form {
+    flex-direction: column;
 }
 
-label {
-    font-size: 14px;
-    color: #000;
+.second-form {
+    flex-direction: column;
 }
 
-.form-input {
-    border: none;
-    background-color: transparent;
-    border-bottom: 1px solid #000;
-    padding: 5px 0;
-    font-size: 16px;
-    color: #000;
-    width: 100%;
+.third-form{
+    flex-direction:row;
 }
 
-.form-input:focus {
-    outline: none;
-    border-bottom: 1px solid #000;
+.items-list {   
+    width: 40%; /* take up remaining space */
 }
+
+.name-buttons {
+    width: 40%; /* take up remaining space */
+}
+
 </style>
 
 <script>
+import { Person } from './People';
+import Item from './Item.js';
+
 export default {
     data() {
         return {
-            numberOfPeople: null,
             listOfPeople: [],
+            stringList: [],
+            numberOfPeople: null,
             listOfAmounts: [],
             showFirstForm: true,
             showSecondForm: false,
             showThirdForm: false,
             tip: 0,
-            tax: 0
+            tax: 0,
+            newString: '',
+            newItemName: '',  // For the name of the new item
+            newItemCost: 0,   // For the cost of the new item
+            items: [],
+            mainItem: null
+        };
+    },
+    watch: {
+        numberOfPeople(newVal, oldVal) {
+            if (newVal > oldVal) {
+                for (let i = oldVal; i < newVal; i++) {
+                    this.listOfPeople.push({ name: '' });
+                }
+            } else {
+                this.listOfPeople = this.listOfPeople.slice(0, newVal);
+            }
+        },
+        items:{
+            immediate: true,  // This ensures the handler gets called immediately upon registration
+            handler(newValue) {
+            if (newValue.length > 0) {
+                this.mainItem = newValue[0];
+                (console.log(this.mainItem));
+            }
+        }
         }
     },
     computed: {
@@ -132,7 +153,7 @@ export default {
     methods: {
         submitForm() {
             if (this.showSecondForm) {
-                console.log(this.listOfAmounts)
+                console.log(this.items)
                 this.showSecondForm = false;
                 this.showThirdForm = true;
             } else if (this.showThirdForm) {
@@ -146,12 +167,27 @@ export default {
                 this.showSecondForm = true;
             }
         },
-        calculateTipTax(itemAmount){
+        calculateTipTax(itemAmount) {
             let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
             return output.toFixed(2).padEnd(4, '0')
+        },
+        resetForm() {
+            this.numberOfPeople = null;
+            this.listOfPeople = [];
+        },
+        addItem() {
+            if (this.newItemName.trim() !== '') {
+                const newItem = new Item(this.newItemName, this.newItemCost);
+                this.items.push(newItem);
+                console.log(this.items);
+                this.newItemName = '';
+                this.newItemCost = 0;
+            }
+        },
+        personButton(){
+
         }
     }
-
 }
 
 </script>
