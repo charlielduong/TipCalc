@@ -34,18 +34,25 @@
                 <button @click="submitForm">Done</button>
             </div>
         </form>
-        <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
-            <div class="items-list" v-for="index in items" :key="index">
-                <label>{{ index.display() }}</label>
-            </div>
 
-            <!-- Persons Buttons on the Right -->
-            <div class="name-buttons">
-                <div v-for="person in numberOfPeople" :key="index">
-                    <button type="button" @click="addToPerson">{{ person }}</button>
+        <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
+            <!-- <div class="items-list" v-for="index in items" :key="index">
+                <label>{{ index.display() }}</label>
+            </div> -->
+            <div class="items-list" v-if="currentItem">
+                <label>{{ currentItem.display() }}</label>
+
+                <!-- Persons Buttons on the Right -->
+                <div class="name-buttons">
+                    <div v-for="person in listOfPeople" :key="index">
+                        <input type="checkbox" :name="`checkbox_${index}`" /> {{ person.name }}
+                    </div>
                 </div>
             </div>
 
+            <!-- <button @click="nextItem" :disabled="isLastItem">Next</button> -->
+            <button v-if="!isLastItem" type="button" @click="nextItem" :disabled="isLastItem">Next</button>
+            <button v-else @click="submitForm">Done</button>
         </form>
     </div>
 </template>
@@ -75,18 +82,19 @@ form {
     flex-direction: column;
 }
 
-.third-form{
-    flex-direction:row;
+.third-form {
+    flex-direction: row;
 }
 
-.items-list {   
-    width: 40%; /* take up remaining space */
+.items-list {
+    width: 40%;
+    /* take up remaining space */
 }
 
 .name-buttons {
-    width: 40%; /* take up remaining space */
+    width: 40%;
+    /* take up remaining space */
 }
-
 </style>
 
 <script>
@@ -109,7 +117,8 @@ export default {
             newItemName: '',  // For the name of the new item
             newItemCost: 0,   // For the cost of the new item
             items: [],
-            mainItem: null
+            mainItem: null,
+            currentIndex: 0 // Loops through items in the third form
         };
     },
     watch: {
@@ -122,14 +131,14 @@ export default {
                 this.listOfPeople = this.listOfPeople.slice(0, newVal);
             }
         },
-        items:{
+        items: {
             immediate: true,  // This ensures the handler gets called immediately upon registration
             handler(newValue) {
-            if (newValue.length > 0) {
-                this.mainItem = newValue[0];
-                (console.log(this.mainItem));
+                if (newValue.length > 0) {
+                    this.mainItem = newValue[0];
+                    (console.log(this.mainItem));
+                }
             }
-        }
         }
     },
     computed: {
@@ -148,7 +157,14 @@ export default {
         },
         combinedLists() {
             return this.listOfPeople.map((person, index) => [person, this.listOfAmounts[index]])
+        },
+        currentItem() {
+            return this.items[this.currentIndex] || null;
+        },
+        isLastItem() {
+            return this.currentIndex === this.items.length - 1;
         }
+
     },
     methods: {
         submitForm() {
@@ -184,8 +200,10 @@ export default {
                 this.newItemCost = 0;
             }
         },
-        personButton(){
-
+        nextItem() {
+            if (this.currentIndex < this.items.length) {
+                this.currentIndex += 1;
+            }
         }
     }
 }
