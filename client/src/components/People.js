@@ -1,10 +1,9 @@
 // Person.js
-export class Person {
+export class People {
   constructor() {
-      this.name = "Enter name here";
+      this.name = "";
       this.items = [];
       this.costs = [];
-      this.addedCurrentItem = false;
   }
 
   addCost(cost){
@@ -14,5 +13,5 @@ export class Person {
   removeCost(){
     this.costs.pop;
   }
-  // Additional methods or properties for the Person class
+  // Additional methods or properties for the People class
 }

@@ -5,6 +5,7 @@ class Item {
         this.cost = cost;
         this.peoples = [];
         this.currentCost = cost;
+        this.isSelected = false;
     }
 
     // Additional methods if needed
