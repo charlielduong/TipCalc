@@ -40,7 +40,7 @@
                                 <div v-if="numberOfPeople">
                                     <div v-for="index in numberOfPeople" :key="index">
                                         <label class="form-label">Person {{ index }} name:</label>
-                                        <input type="text" class="form-control" v-model="formData.names[index - 1]" required>
+                                        <input type="text" class="form-control" v-model="formData.names[index]" required>
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary" @click="nextStep">Next</button>
@@ -98,7 +98,26 @@ export default {
             formData: {
                 names: [''],
                 items: [{ itemName: '', itemCost: 0 }],
-                // purchases: {}
+                purchases: 
+                {
+                    tip: 2,
+                    tax: 2,
+                    fee: 2,
+                    "customers": {
+                        "charlie": {
+                            "total_amount": 54.3,
+                            "items":["Apple", "Banana", "Cherry"]
+                        },
+                        "isaac": {
+                            "total_amount": 73.2,
+                            "items":["Brisket","Cherry"]
+                        },
+                        "via": {
+                            "total_amount": 20.2,
+                            "items":["Apple"]
+                        }
+                    }
+                }
             }
         };
     },
