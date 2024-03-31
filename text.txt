@@ -1,0 +1,60 @@
+Here's an example of how you can implement the third part of the form:
+
+
+<div v-else>
+  <h2>i paid for my friends</h2>
+  <h3>{{ formData.names }}</h3>
+  <div v-for="(person, index) in formData.names" :key="index">
+    <h4>{{ person }}</h4>
+    <div v-for="(item, itemIndex) in formData.items" :key="itemIndex">
+      <label>
+        <input type="checkbox" v-model="formData.assignments[index][itemIndex]" :value="item.itemName" />
+        {{ item.itemName }}
+      </label>
+    </div>
+  </div>
+  <button type="button" class="btn btn-secondary" @click="prevStep">Previous</button>
+  <button type="submit" class="btn btn-success">Submit</button>
+</div>
+This code uses another nested v-for loop to loop through each person and then through each item. It adds a checkbox for each item, allowing the user to select which items each person purchased. The v-model directive is used to bind the checkbox to the formData.assignments array, which should be initialized as a 2D array with the same dimensions as formData.names and formData.items. Each element of formData.assignments[i][j] should be a boolean indicating whether person i purchased item j.
+
+
+To make this work, you will also need to add a method to the data object to initialize formData.assignments properly:
+
+
+data() {
+  return {
+    // ... other data properties ...
+    formData: {
+      names: [],
+      items: [],
+      assignments: [],
+    },
+    // ... other methods ...
+  };
+},
+You will also need to call this method whenever formData.names or formData.items changes to update the size of formData.assignments. You can do this using a watch property:
+
+
+watch: {
+  'formData.names': function() {
+    this.initializeAssignments();
+  },
+  'formData.items': function() {
+    this.initializeAssignments();
+  },
+},
+methods: {
+  initializeAssignments: function() {
+    const numPeople = this.formData.names.length;
+    const numItems = this.formData.items.length;
+    this.formData.assignments = Array.from({ length: numPeople }, () => Array(numItems).fill(false));
+  },
+  // ... other methods ...
+},
+
+
+The first( my own )JSON format is easier to access data such as individual amount due and items purchased since it’s organized in an object with clear keys and values. However, the second JSON format is easier to implement into the frontend system since it’s organized by individuals, which can be more straightforward to handle and manage.
+
+
+In conclusion, the choice between the two JSON formats depends on your specific use case and how you want to organize your data. If you need to access data quickly and easily by group, then the first JSON format may be better suited for your needs. If you prefer to organize data by individual and find it easier to implement into the frontend system, then the second JSON format may be a better option.

@@ -1,8 +1,9 @@
 {
     "form_data": {
-        "num_columns": "3",
-        "tip_percentage": "20",
-        "columns": {
+        "total_bill": 25.45,
+        "tip_percentage": 20,
+        "tax_percentage": 6.0,
+        "customers": {
             "charlie": {
                 "total_amount": 54.3,
                 "items":["Apple", "Banana", "Cherry"]
@@ -11,10 +12,11 @@
                 "total_amount": 73.2,
                 "items":["Brisket","Cherry"]
             },
-            "ashley": {
+            "via": {
                 "total_amount": 20.2,
                 "items":["Apple"]
             }
         }
     }
 }
+

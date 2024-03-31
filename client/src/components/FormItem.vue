@@ -1,211 +1,156 @@
 <template>
-    <div class="form-container">
-        <form class="first-form" @submit.prevent="submitForm" v-if="showFirstForm">
-            <label for="numberOfPeople">Number of people splitting the bill</label>
-
-            <!-- Start form -->
-            <input type="number" id="numberOfPeople" v-model="numberOfPeople" min="1" max="20" required>
-
-            <template v-if="numberOfPeople">
-                <div v-for="index in numberOfPeople" :key="index">
-                    <label>Person {{ index }} name:</label>
-                    <input type="text" v-model="listOfPeople[index - 1].name" placeholder="Enter person's name" required>
-                </div>
-
-            </template>
-
-            <button type="button" @click="resetForm">Reset</button>
-            <button type="submit">Next</button>
-        </form>
-
-        <form class="second-form" @submit.prevent="submitForm" v-if="showSecondForm">
-            <h2>Second Form</h2>
-
-            <div>
-                <!-- Fields to add a new item -->
-                <input v-model="newItemName" placeholder="Enter item name" />
-                <input type="number" v-model.number="newItemCost" placeholder="Enter item cost" />
-
-                <div v-for="index in items" :key="index">
-                    <label>{{ index }}</label>
-                </div>
-                <button type="button" @click="addItem">Add Item</button>
-
-                <button @click="submitForm">Done</button>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Logo</a>
             </div>
-        </form>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        <form class="third-form" @submit.prevent="submitForm" v-if="showThirdForm">
-            <!-- <div class="items-list" v-for="index in items" :key="index">
-                <label>{{ index.display() }}</label>
-            </div> -->
-            <div class="items-list" v-if="currentItem">
-                <label>{{ currentItem.display() }}</label>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <form @submit.prevent="submitForm" novalidate>
+                            <div v-if="currentStep === 1">
+                                <h2>I paid for my friends</h2>
+                        
+                                <label for="numberOfPeople" class="form-label">Number of people splitting the
+                                    bill</label>
+                                <input type="number" class="form-control" id="numberOfPeople" v-model="numberOfPeople"
+                                    min="1" max="20" required>
 
-                <!-- Persons Buttons on the Right -->
-                <div class="name-buttons">
-                    <div v-for="person in listOfPeople" :key="index">
-                        <input type="checkbox" :name="`checkbox_${index}`" /> {{ person.name }}
+                                <div v-if="numberOfPeople">
+                                    <div v-for="index in numberOfPeople" :key="index">
+                                        <label class="form-label">Person {{ index }} name:</label>
+                                        <input type="text" class="form-control" v-model="formData.names[index - 1]" required>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" @click="nextStep">Next</button>
+                            </div>
+                            <div v-else-if="currentStep === 2">
+                                <h2>i paid for my friends</h2>
+                                <div v-for="(item, index) in Object.entries(formData.items)" :key="index" class="mb-3">
+                                    <label :for="'item_name_' + index" class="form-label">Item Name {{ index + 1 }}</label>
+                                    <input type="text" :id="'item_name_' + index" class="form-control"
+                                        v-model="formData.items[index].itemName" required>
+
+                                    <label :for="'item_cost_' + index" class="form-label">Item Cost</label>
+                                    <input type="number" :id="'item_cost_' + index" class="form-control"
+                                        v-model="formData.items[index].itemCost" required>
+                                </div>
+                                <button type="button" class="btn btn-primary" @click="addItem">Add Item</button>
+                                <button type="button" class="btn btn-secondary" @click="prevStep">Previous</button>
+                                <button type="button" class="btn btn-primary" @click="nextStep">Next</button>
+                            </div>
+                            <div v-else>
+                                <h2>i paid for my friends</h2>
+                                <h3> {{ this.names }}</h3>
+                                <!-- <h3>{{ this.items }}</h3> -->
+                                <!-- <div class="mb-3" v-if="currentName">
+                                    <label>{{ currentName.display() }}</label>
+
+                                    <div class="item-buttons">
+                                        <div v-for="item in formData.items" :key="index">
+                                            <input type="checkbox" :name="`checkbox_${index}`" /> {{ item.itemName }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button v-if="!isLastItem" type="button" @click="nextName" :disabled="isLastName">Next Person</button> -->
+                                <button type="button" class="btn btn-secondary" @click="prevStep">Previous</button>
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-
-            <!-- <button @click="nextItem" :disabled="isLastItem">Next</button> -->
-            <button v-if="!isLastItem" type="button" @click="nextItem" :disabled="isLastItem">Next</button>
-            <button v-else @click="submitForm">Done</button>
-        </form>
+        </div>
     </div>
 </template>
 
-<style>
-.form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #fff;
-}
-
-form {
-    display: flex;
-    max-width: 400px;
-    width: 400px;
-    padding: 20px;
-    border: 1px solid #000;
-}
-
-.first-form {
-    flex-direction: column;
-}
-
-.second-form {
-    flex-direction: column;
-}
-
-.third-form {
-    flex-direction: row;
-}
-
-.items-list {
-    width: 40%;
-    /* take up remaining space */
-}
-
-.name-buttons {
-    width: 40%;
-    /* take up remaining space */
-}
-</style>
-
 <script>
-import { Person } from './People';
-import Item from './Item.js';
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default {
     data() {
         return {
-            listOfPeople: [],
-            stringList: [],
             numberOfPeople: null,
-            listOfAmounts: [],
-            showFirstForm: true,
-            showSecondForm: false,
-            showThirdForm: false,
-            tip: 0,
-            tax: 0,
-            newString: '',
-            newItemName: '',  // For the name of the new item
-            newItemCost: 0,   // For the cost of the new item
-            items: [],
-            mainItem: null,
-            currentIndex: 0 // Loops through items in the third form
+            currentStep: 1,
+            currentItem: null,
+            currentNameIndex: 0,
+            formData: {
+                names: [''],
+                items: [{ itemName: '', itemCost: 0 }],
+                // purchases: {}
+            }
         };
     },
-    watch: {
-        numberOfPeople(newVal, oldVal) {
-            if (newVal > oldVal) {
-                for (let i = oldVal; i < newVal; i++) {
-                    this.listOfPeople.push({ name: '' });
-                }
-            } else {
-                this.listOfPeople = this.listOfPeople.slice(0, newVal);
-            }
-        },
-        items: {
-            immediate: true,  // This ensures the handler gets called immediately upon registration
-            handler(newValue) {
-                if (newValue.length > 0) {
-                    this.mainItem = newValue[0];
-                    (console.log(this.mainItem));
-                }
-            }
-        }
-    },
     computed: {
-        calculateSubTotal() {
-            return this.listOfAmounts.reduce((sum, num) => sum + num, 0)
-        },
-        calculateTotal() {
-            return (this.calculateSubTotal + (this.calculateSubTotal * (this.tip * .01)) + (this.calculateSubTotal * (this.tax * .01))).toFixed(2).padEnd(4, '0')
-        },
-        calculateTip() {
-            return (this.calculateSubTotal * (this.tip * .01)).toFixed(2).padEnd(4, '0')
-        },
-        calculateTax() {
-            return (this.calculateSubTotal * (this.tax * .01)).toFixed(2).padEnd(4, '0')
-            //Used to wrap this w/ Number(return statement) to return this as a number instead of string
-        },
-        combinedLists() {
-            return this.listOfPeople.map((person, index) => [person, this.listOfAmounts[index]])
-        },
-        currentItem() {
-            return this.items[this.currentIndex] || null;
-        },
-        isLastItem() {
-            return this.currentIndex === this.items.length - 1;
+        currentName() {
+            return this.formData.names[this.currentNameIndex] || null;
         }
-
     },
     methods: {
-        submitForm() {
-            if (this.showSecondForm) {
-                console.log(this.items)
-                this.showSecondForm = false;
-                this.showThirdForm = true;
-            } else if (this.showThirdForm) {
-                console.log(this.tip)
-                console.log(this.tax)
-                this.showThirdForm = false
-
-            } else {
-                console.log(this.listOfPeople)
-                this.showFirstForm = false;
-                this.showSecondForm = true;
-            }
-        },
-        calculateTipTax(itemAmount) {
-            let output = itemAmount + (itemAmount * (this.tip * .01)) + (itemAmount * (this.tax * .01))
-            return output.toFixed(2).padEnd(4, '0')
-        },
-        resetForm() {
-            this.numberOfPeople = null;
-            this.listOfPeople = [];
+        addName() {
+            this.formData.names.push('');
         },
         addItem() {
-            if (this.newItemName.trim() !== '') {
-                const newItem = new Item(this.newItemName, this.newItemCost);
-                this.items.push(newItem);
-                console.log(this.items);
-                this.newItemName = '';
-                this.newItemCost = 0;
+            this.formData.items.push({ itemName: '', itemCost: 0 });
+        },
+        // addItem() {
+        //     if (this.newItemName.trim() !== '') {
+        //         const newItem = new Item(this.newItemName, this.newItemCost);
+        //         this.items.push(newItem);
+        //         console.log(this.items);
+        //         this.newItemName = '';
+        //         this.newItemCost = 0;
+        //     }
+        // },
+        nextStep() {
+            this.currentStep++;
+        },
+        prevStep() {
+            this.currentStep--;
+        },
+        nextName() {
+            if (this.currentName < this.items.length) {
+                this.currentName += 1;
             }
         },
-        nextItem() {
-            if (this.currentIndex < this.items.length) {
-                this.currentIndex += 1;
-            }
+        isLastName() {
+            return this.currentNameIndex === this.names.length - 1;
+        },
+        submitForm() {
+            // Handle form submission
+            console.log('Form submitted with data:', this.formData);
+            // Optionally, you can reset the form data and step here
+            // this.formData = {};
+            // this.currentStep = 1;
         }
     }
-}
-
+};
 </script>
+
+<style scoped>
+.navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+</style>
