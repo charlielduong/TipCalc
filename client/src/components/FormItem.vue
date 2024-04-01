@@ -1,28 +1,4 @@
 <template>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Logo</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <div class="container">
         <div class="row">
             <div class="col-md-6 offset-md-3">
@@ -30,7 +6,7 @@
                     <div class="card-body">
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
-                                <h2>I paid for my friends</h2>
+                                <h2>I paid for my friends1</h2>
 
                                 <label for="numberOfPeople" class="form-label">Number of people splitting the
                                     bill</label>
@@ -137,6 +113,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default {
@@ -237,10 +214,16 @@ export default {
         },
         submitForm() {
             // Handle form submission
-            console.log('Form submitted with data:', this.formData);
-            // Optionally, you can reset the form data and step here
-            // this.formData = {};
-            // this.currentStep = 1;
+            const formDataJson = JSON.stringify(this.formData);
+            axios.post('/api/endpoint', formDataJson) // Fast API already expects JSON data by default
+            .then(response => {
+                console.log('SUBMITTED YUHH')
+                console.log(response);
+            })
+            .catch(error => {
+                console.log('NOT SUUBMITTED')
+                console.error(error);
+            });
         }
     }
 };
