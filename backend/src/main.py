@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import FastAPI, Form, UploadFile, File, Request, Depends
+from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -40,7 +40,8 @@ def home():
 @app.post("/process_form")
 async def process_form(data: FormData):
     # data is now an instance of FormData
-    return data
+    response_dict = {"message": "Data processed successfully"}
+    return Response(content=response_dict, media_type="application/json")
 
 
     # # Initialize variables for total tax, tip, and other fees

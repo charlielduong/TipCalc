@@ -217,6 +217,8 @@ export default {
             const formDataJson = JSON.stringify(this.formData);
             axios.post('/api/endpoint', formDataJson) // Fast API already expects JSON data by default
             .then(response => {
+                // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
+                // Something like response.data.message?? 
                 console.log('SUBMITTED YUHH')
                 console.log(response);
             })
