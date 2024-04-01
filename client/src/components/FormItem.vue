@@ -31,7 +31,7 @@
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
                                 <h2>I paid for my friends</h2>
-                        
+
                                 <label for="numberOfPeople" class="form-label">Number of people splitting the
                                     bill</label>
                                 <input type="number" class="form-control" id="numberOfPeople" v-model="numberOfPeople"
@@ -40,7 +40,8 @@
                                 <div v-if="numberOfPeople">
                                     <div v-for="index in numberOfPeople" :key="index">
                                         <label class="form-label">Person {{ index }} name:</label>
-                                        <input type="text" class="form-control" v-model="formData.names[index]" required>
+                                        <input type="text" class="form-control" v-model="formData.names[index - 1]"
+                                            required>
                                     </div>
                                 </div>
                                 <button type="button" class="btn btn-primary" @click="nextStep">Next</button>
@@ -48,7 +49,8 @@
                             <div v-else-if="currentStep === 2">
                                 <h2>i paid for my friends</h2>
                                 <div v-for="(item, index) in Object.entries(formData.items)" :key="index" class="mb-3">
-                                    <label :for="'item_name_' + index" class="form-label">Item Name {{ index + 1 }}</label>
+                                    <label :for="'item_name_' + index" class="form-label">Item Name {{ index + 1
+                                        }}</label>
                                     <input type="text" :id="'item_name_' + index" class="form-control"
                                         v-model="formData.items[index].itemName" required>
 
@@ -62,7 +64,29 @@
                             </div>
                             <div v-else>
                                 <h2>i paid for my friends</h2>
-                                <h3> {{ this.names }}</h3>
+                                <div>
+                                    <h2>{{ currentName }}</h2>
+                                    <button type="button" class="btn btn-secondary" @click="prevStep">Previous</button>
+                                    <div v-if="currentName != null">
+                                        <div v-for="(item, itemIndex) in this.formData.items" :key="itemIndex">
+                                            <input type="checkbox" :id="'item' + itemIndex" v-model="item.selected"
+                                                @change="updatePurchases(item)" />
+                                            <label :for="'item' + itemIndex">{{ item.itemName }}</label>
+                                        </div>
+                                        <button @click="nextPerson">Next Person</button>
+                                    </div>
+                                    <div v-else>
+                                        <button type="submit" class="btn btn-success">Next</button>
+                                    </div>
+                                    <div>
+                                        <h3>Purchases:</h3>
+                                        <ul>
+                                            <li v-for="(names, item) in formData.purchases" :key="item">
+                                                {{ item }}: {{ names }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <!-- <h3>{{ this.items }}</h3> -->
                                 <!-- <div class="mb-3" v-if="currentName">
                                     <label>{{ currentName.display() }}</label>
@@ -74,8 +98,8 @@
                                     </div>
                                 </div>
                                 <button v-if="!isLastItem" type="button" @click="nextName" :disabled="isLastName">Next Person</button> -->
-                                <button type="button" class="btn btn-secondary" @click="prevStep">Previous</button>
-                                <button type="submit" class="btn btn-success">Submit</button>
+
+
                             </div>
                         </form>
                     </div>
@@ -98,25 +122,8 @@ export default {
             formData: {
                 names: [''],
                 items: [{ itemName: '', itemCost: 0 }],
-                purchases: 
+                purchases:
                 {
-                    tip: 2,
-                    tax: 2,
-                    fee: 2,
-                    "customers": {
-                        "charlie": {
-                            "total_amount": 54.3,
-                            "items":["Apple", "Banana", "Cherry"]
-                        },
-                        "isaac": {
-                            "total_amount": 73.2,
-                            "items":["Brisket","Cherry"]
-                        },
-                        "via": {
-                            "total_amount": 20.2,
-                            "items":["Apple"]
-                        }
-                    }
                 }
             }
         };
@@ -127,21 +134,9 @@ export default {
         }
     },
     methods: {
-        addName() {
-            this.formData.names.push('');
-        },
         addItem() {
             this.formData.items.push({ itemName: '', itemCost: 0 });
         },
-        // addItem() {
-        //     if (this.newItemName.trim() !== '') {
-        //         const newItem = new Item(this.newItemName, this.newItemCost);
-        //         this.items.push(newItem);
-        //         console.log(this.items);
-        //         this.newItemName = '';
-        //         this.newItemCost = 0;
-        //     }
-        // },
         nextStep() {
             this.currentStep++;
         },
@@ -151,6 +146,32 @@ export default {
         nextName() {
             if (this.currentName < this.items.length) {
                 this.currentName += 1;
+            }
+        },
+        nextPerson() {
+            if (this.currentNameIndex !== this.formData.names.length) {
+                this.currentNameIndex = (this.currentNameIndex + 1);
+                this.formData.items.forEach(item => (item.selected = false));
+            }
+            else
+                this.nextStep();
+        },
+        updatePurchases(item) {
+            const itemName = item.itemName;
+            const personName = this.currentName;
+
+            if (!this.formData.purchases[itemName]) {
+                this.formData.purchases[itemName] = []; // Create purchases[itemName] if it doesn't exist
+            }
+
+            const purchasesList = this.formData.purchases[itemName];
+            const index = purchasesList.indexOf(personName);
+
+            if (item.selected && index === -1) {
+                purchasesList.push(personName); // Add personName to purchasesList if selected and not already present
+            } else if (!item.selected && index !== -1) {
+                purchasesList.splice(index, 1); // Remove personName from purchasesList if not selected and present
+
             }
         },
         isLastName() {
@@ -169,7 +190,7 @@ export default {
 
 <style scoped>
 .navbar {
-      margin-bottom: 0;
-      border-radius: 0;
-    }
+    margin-bottom: 0;
+    border-radius: 0;
+}
 </style>
