@@ -10,18 +10,19 @@
                     "Via": 4
                 }
             },
-            "isaac": {
+            "Oranges": {
                 "total_amount": 73.2,
-                "items": [
-                    "Brisket",
-                    "Cherry"
-                ]
+                "People": {
+                    "Charlie": 50,
+                    "Via": 4
+                }
             },
-            "via": {
+            "Things": {
                 "total_amount": 20.2,
-                "items": [
-                    "Apple"
-                ]
+                "People": {
+                    "Charlie": 50,
+                    "Via": 4
+                }
             }
         }
     }

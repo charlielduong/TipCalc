@@ -80,11 +80,16 @@
                                     </div>
                                     <div>
                                         <h3>Purchases:</h3>
-                                        <ul>
-                                            <li v-for="(names, item) in formData.purchases" :key="item">
-                                                {{ item }}: {{ names }}
+                                        <ul v-if="Object.keys(reversedData).length > 0">
+                                            <li v-for="(items, name) in reversedData" :key="name">
+                                                {{ name }}:
+                                                <ul>
+                                                    <li v-for="item in items" :key="item.itemName">{{ item.itemName }} -
+                                                        ${{ item.itemCost }}</li>
+                                                </ul>
                                             </li>
                                         </ul>
+                                        <p v-else>No purchases data available.</p>
                                     </div>
                                 </div>
 
@@ -107,20 +112,21 @@
                                 <h2>i paid for my friends</h2>
                                 <div class="mb-3">
                                     <label>Tax:</label>
-                                    <input type="number" v-model="tax" placeholder="Tax amount">
+                                    <input type="number" v-model="this.tax" placeholder="Tax amount">
                                 </div>
 
                                 <!-- Input field for tip -->
                                 <div class="mb-3">
                                     <label>Tip:</label>
-                                    <input type="number" v-model="tip" placeholder="Tip amount">
+                                    <input type="number" v-model="this.tip" placeholder="Tip amount">
                                 </div>
 
                                 <!-- Input field for optional fees -->
                                 <div class="mb-3">
                                     <label>Optional Fees:</label>
-                                    <input type="number" v-model="optionalFees" placeholder="Optional fees">
+                                    <input type="number" v-model="this.fees" placeholder="Optional fees">
                                 </div>
+                                <button type="submit" class="btn btn-success" @click="checkTipTaxandFees">Next</button>
                             </div>
                         </form>
                     </div>
@@ -169,6 +175,18 @@ export default {
     computed: {
         currentName() {
             return this.formData.names[this.currentNameIndex] || null;
+        },
+        reversedData() {
+            const reversedData = {};
+            for (const person of this.formData.names) {
+                reversedData[person] = [];
+                for (const item of this.formData.items) {
+                    if (this.formData.purchases[item.itemName] && this.formData.purchases[item.itemName].includes(person)) {
+                        reversedData[person].push(item);
+                    }
+                }
+            }
+            return reversedData;
         }
     },
     methods: {
@@ -177,7 +195,7 @@ export default {
         },
         nextStep() {
             this.currentStep++;
-            console.log(this.currentStep);
+            console.log(this.purchases);
         },
         prevStep() {
             this.currentStep--;
@@ -188,12 +206,8 @@ export default {
             }
         },
         nextPerson() {
-            if (this.currentNameIndex !== this.formData.names.length) {
-                this.currentNameIndex = (this.currentNameIndex + 1);
-                this.formData.items.forEach(item => (item.selected = false));
-            }
-            else
-                this.nextStep();
+            this.currentNameIndex = (this.currentNameIndex + 1);
+            this.formData.items.forEach(item => (item.selected = false));
         },
         updatePurchases(item) {
             const itemName = item.itemName;
@@ -213,6 +227,11 @@ export default {
 
             }
         },
+        checkTipTaxandFees() {
+            console.log("tax " + this.tax);
+            console.log("tip: " + this.tip);
+            console.log("fees: " + this.fees);
+        },
         isLastName() {
             return this.currentNameIndex === this.names.length - 1;
         },
@@ -228,7 +247,7 @@ export default {
 </script>
 
 <style scoped>
-.navbar{
+.navbar {
     margin-bottom: 0;
     border-radius: 0;
 }
