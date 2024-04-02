@@ -13,21 +13,23 @@ import requests
 # from pymongo import MongoClient
 import os
 from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
-
-class FormData(BaseModel):
-    # TODO Define form data model here
-    field1:str
+    
 
 # client = MongoClient("mongodb://your_mongo_server_address:27017/")
 # db = client["your_database_name"]
 # collection = db["your_collection_name"]
 
+origins = [
+    "http://localhost:8080",
+    "http://localhost:5000"
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all ports
+    allow_origins=origins, # Allow all ports
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
@@ -38,10 +40,35 @@ def home():
     return "This is connected to the backend: main.py"
 
 @app.post("/process_form")
-async def process_form(data: FormData):
+async def process_form(request: Request):
+    data = await request.json()
+
+    name_cost_dict = {}
+
+    # Iterate through each item in the purchases
+    for item_name, buyers in data["purchases"].items():
+        item_cost = next(item["itemCost"] for item in data["items"] if item["itemName"] == item_name)
+        num_buyers = len(buyers)
+        cost_per_buyer = item_cost / num_buyers  # Calculate the cost per buyer
+        for buyer in buyers:
+            if buyer in name_cost_dict:
+                name_cost_dict[buyer] += cost_per_buyer
+            else:
+                name_cost_dict[buyer] = cost_per_buyer
+
+    return(name_cost_dict)
     # data is now an instance of FormData
-    response_dict = {"message": "Data processed successfully"}
-    return Response(content=response_dict, media_type="application/json")
+    # formData = data
+    # if formData:
+    #     return {"message": "Data processed successfully"}
+    # else:
+    #     return {"message": "No formData found in the request"}
+
+# @app.post("/process_form")
+# async def process_form(data: FormData):
+#     # data is now an instance of FormData
+#     response_dict = {"message": "Data processed successfully"}
+#     return Response(content=response_dict, media_type="application/json")
 
 
     # # Initialize variables for total tax, tip, and other fees

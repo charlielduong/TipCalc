@@ -119,6 +119,20 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default {
     data() {
         return {
+            numberOfPeople: 3,
+            currentStep: 1,
+            currentItem: null,
+            currentNameIndex: 0,
+            tax: 0,
+            tip: 0,
+            fees: 0,
+            formData: {
+                names: ["Isaac", "Charlie", "Katherine"],
+                items: [{ itemName: "Apples", itemCost: 20 }, { itemName: "Oranges", itemCost: 30 }],
+                purchases:
+                {
+                }
+            }
             // numberOfPeople: null,
             // currentStep: 1,
             // currentItem: null,
@@ -133,20 +147,6 @@ export default {
             //     {
             //     }
             // }
-            numberOfPeople: 3,
-            currentStep: 1,
-            currentItem: null,
-            currentNameIndex: 0,
-            tax: 0,
-            tip: 0,
-            fees: 0,
-            formData: {
-                names: ["Isaac", "Charlie", "Via"],
-                items: [{ itemName: "Apples", itemCost: 20 }, { itemName: "Oranges", itemCost: 30 }],
-                purchases:
-                {
-                }
-            }
         };
     },
     computed: {
@@ -182,7 +182,8 @@ export default {
                 this.currentName += 1;
             }
         },
-        nextPerson() {
+        nextPerson(event) {
+            event.preventDefault();
             this.currentNameIndex = (this.currentNameIndex + 1);
             this.formData.items.forEach(item => (item.selected = false));
         },
@@ -215,17 +216,17 @@ export default {
         submitForm() {
             // Handle form submission
             const formDataJson = JSON.stringify(this.formData);
-            axios.post('/api/endpoint', formDataJson) // Fast API already expects JSON data by default
-            .then(response => {
-                // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
-                // Something like response.data.message?? 
-                console.log('SUBMITTED YUHH')
-                console.log(response);
-            })
-            .catch(error => {
-                console.log('NOT SUUBMITTED')
-                console.error(error);
-            });
+            axios.post('/process_form', formDataJson) // Fast API already expects JSON data by default
+                .then(response => {
+                    // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
+                    // Something like response.data.message?? 
+                    console.log('SUBMITTED YUHH')
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log('NOT SUUBMITTED')
+                    console.error(error);
+                });
         }
     }
 };
