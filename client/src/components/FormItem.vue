@@ -1,26 +1,31 @@
 <template>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Logo</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                </ul>
-            </div>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">i paid for my friends</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <!-- <li class="nav-item">
+            <router-link :to="{ name: 'home' }" class="nav-link">Home</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'history' }" class="nav-link">History</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
+          </li> -->
+          <li class="nav-item">
+                <button class="btn btn-primary">Log In</button>
+            </li>
+        </ul>
+        <ul class="navbar-nav"> <!-- Changed position of this ul -->
+            <li class="nav-item">
+                <button class="btn btn-primary">Log In</button>
+            </li>
+        </ul>
+      </div>
     </nav>
 
     <div class="container">
@@ -87,6 +92,8 @@
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css';
+// import BootstrapVue from 'bootstrap-vue'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 export default {
     data() {
