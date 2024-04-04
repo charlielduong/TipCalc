@@ -7,18 +7,15 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <!-- <li class="nav-item">
-            <router-link :to="{ name: 'home' }" class="nav-link">Home</router-link>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'history' }" class="nav-link">History</router-link>
+            <a class="nav-link" href="#">History</a>
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
-          </li> -->
-          <li class="nav-item">
-                <button class="btn btn-primary">Log In</button>
-            </li>
+            <a class="nav-link" href="#">About</a>
+          </li>
         </ul>
         <ul class="navbar-nav"> <!-- Changed position of this ul -->
             <li class="nav-item">
