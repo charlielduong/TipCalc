@@ -3,20 +3,27 @@
         "total_bill": 25.45,
         "tip_percentage": 20,
         "tax_percentage": 6.0,
-        "customers": {
-            "charlie": {
-                "total_amount": 54.3,
-                "items":["Apple", "Banana", "Cherry"]
+        "purchases": {
+            "Apples": {
+                "People": {
+                    "Charlie": 50,
+                    "Via": 4
+                }
             },
-            "isaac": {
+            "Oranges": {
                 "total_amount": 73.2,
-                "items":["Brisket","Cherry"]
+                "People": {
+                    "Charlie": 50,
+                    "Via": 4
+                }
             },
-            "via": {
+            "Things": {
                 "total_amount": 20.2,
-                "items":["Apple"]
+                "People": {
+                    "Charlie": 50,
+                    "Via": 4
+                }
             }
         }
     }
 }
-
