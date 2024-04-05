@@ -1,17 +1,17 @@
 // Person.js
 export class Person {
   constructor() {
-      this.name = "Enter name here";
-      this.items = [];
-      this.costs = [];
-      this.addedCurrentItem = false;
+    this.name = "Enter name here";
+    this.items = [];
+    this.costs = [];
+    this.addedCurrentItem = false;
   }
 
-  addCost(cost){
+  addCost(cost) {
     this.costs.push(cost);
   }
 
-  removeCost(){
+  removeCost() {
     this.costs.pop;
   }
   // Additional methods or properties for the Person class
