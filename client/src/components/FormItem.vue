@@ -88,20 +88,29 @@
                                 <h2>i paid for my friends</h2>
                                 <div class="mb-3">
                                     <label>Tax:</label>
-                                    <input type="number" v-model="this.tax" placeholder="Tax amount">
+                                    <input type="number" v-model="this.formData.tax" placeholder="Tax amount">
                                 </div>
 
                                 <!-- Input field for tip -->
                                 <div class="mb-3">
                                     <label>Tip:</label>
-                                    <input type="number" v-model="this.tip" placeholder="Tip amount">
+                                    <input type="number" v-model="this.formData.tip" placeholder="Tip amount">
                                 </div>
 
                                 <!-- Input field for optional fees -->
                                 <div class="mb-3">
                                     <label>Optional Fees:</label>
-                                    <input type="number" v-model="this.fees" placeholder="Optional fees">
+                                    <input type="number" v-model="this.formData.fees" placeholder="Optional fees">
                                 </div>
+                                <button type="submit" class="btn btn-success" @click="nextStep">Next</button>
+                            </div>
+                            <div v-else-if="currentStep === 5">
+                                <h1>Processed Data</h1>
+                                <ul>
+                                    <li v-for="(value, name) in processedData" :key="name">
+                                        {{ name }}: ${{ Number(value).toFixed(2) }}
+                                    </li>
+                                </ul>
                                 <button type="submit" class="btn btn-success" @click="checkTipTaxandFees">Next</button>
                             </div>
                         </form>
@@ -123,16 +132,17 @@ export default {
             currentStep: 1,
             currentItem: null,
             currentNameIndex: 0,
-            tax: 0,
-            tip: 0,
-            fees: 0,
             formData: {
                 names: ["Isaac", "Charlie", "Katherine"],
                 items: [{ itemName: "Apples", itemCost: 20 }, { itemName: "Oranges", itemCost: 30 }],
                 purchases:
                 {
-                }
-            }
+                },
+                tax: 0,
+                tip: 0,
+                fees: 0,
+            },
+            processedData: {},
             // numberOfPeople: null,
             // currentStep: 1,
             // currentItem: null,
@@ -172,7 +182,6 @@ export default {
         },
         nextStep() {
             this.currentStep++;
-            console.log(this.purchases);
         },
         prevStep() {
             this.currentStep--;
@@ -206,9 +215,9 @@ export default {
             }
         },
         checkTipTaxandFees() {
-            console.log("tax " + this.tax);
-            console.log("tip: " + this.tip);
-            console.log("fees: " + this.fees);
+            console.log("tax " + this.formData.tax);
+            console.log("tip: " + this.formData.tip);
+            console.log("fees: " + this.formData.fees);
         },
         isLastName() {
             return this.currentNameIndex === this.names.length - 1;
@@ -221,7 +230,8 @@ export default {
                     // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
                     // Something like response.data.message?? 
                     console.log('SUBMITTED YUHH')
-                    console.log(response);
+                    console.log(response.data);
+                    this.processedData = response.data;
                 })
                 .catch(error => {
                     console.log('NOT SUUBMITTED')

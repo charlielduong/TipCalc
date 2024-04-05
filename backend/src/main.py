@@ -31,7 +31,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins, # Allow all ports
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
+    allow_methods=["GET", "POST"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
 
@@ -55,6 +55,18 @@ async def process_form(request: Request):
                 name_cost_dict[buyer] += cost_per_buyer
             else:
                 name_cost_dict[buyer] = cost_per_buyer
+    # Calculate the total cost of the items
+    total_cost = sum(name_cost_dict.values())
+    # Calculate the total cost of the purchases, including the tip and tax
+    total_cost_with_tip_and_tax = total_cost + data["tip"] + data["tax"]
+    # Calculate the percentage of the tip and tax
+    tip_percentage = (data["tip"] / total_cost) * 100
+    tax_percentage = (data["tax"] / total_cost) * 100
+
+    for purchase in name_cost_dict:
+        purchase_cost = name_cost_dict[purchase]
+        increase_amount = (purchase_cost * tip_percentage / 100) + (purchase_cost * tax_percentage / 100)
+        name_cost_dict[purchase] += increase_amount
 
     return(name_cost_dict)
     # data is now an instance of FormData
