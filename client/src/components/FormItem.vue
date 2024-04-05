@@ -20,6 +20,9 @@
                                             required>
                                     </div>
                                 </div>
+                                <button type="button" class="btn btn-primary" @click="removePerson">Remove
+                                    Person</button>
+                                <button type="button" class="btn btn-primary" @click="addPerson">Add Person</button>
                                 <button type="button" class="btn btn-primary" @click="nextStep">Next</button>
                             </div>
                             <div v-else-if="currentStep === 2">
@@ -191,6 +194,14 @@ export default {
                 this.currentName += 1;
             }
         },
+        addPerson() {
+            this.formData.names.push("");
+            this.numberOfPeople++;
+        },
+        removePerson() {
+            this.formData.names.splice(-1, 1)
+            this.numberOfPeople--;
+        },
         nextPerson(event) {
             event.preventDefault();
             this.currentNameIndex = (this.currentNameIndex + 1);
@@ -218,6 +229,7 @@ export default {
             console.log("tax " + this.formData.tax);
             console.log("tip: " + this.formData.tip);
             console.log("fees: " + this.formData.fees);
+            console.log("purchases: " + JSON.stringify(this.formData.purchases));
         },
         isLastName() {
             return this.currentNameIndex === this.names.length - 1;
