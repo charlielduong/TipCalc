@@ -6,15 +6,13 @@
                     <div class="card-body">
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
-                                <h2>I paid for my friends1</h2>
+                                <h2>I paid for my friends</h2>
 
                                 <label for="numberOfPeople" class="form-label">Number of people splitting the
                                     bill</label>
-                                <input type="number" class="form-control" id="numberOfPeople" v-model="numberOfPeople"
-                                    min="1" max="20" required>
 
-                                <div v-if="numberOfPeople">
-                                    <div v-for="index in numberOfPeople" :key="index">
+                                <div v-if="formData.names">
+                                    <div v-for="index in formData.names.length" :key="index">
                                         <label class="form-label">Person {{ index }} name:</label>
                                         <input type="text" class="form-control" v-model="formData.names[index - 1]"
                                             required>
@@ -131,7 +129,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default {
     data() {
         return {
-            numberOfPeople: 3,
             currentStep: 1,
             currentItem: null,
             currentNameIndex: 0,
