@@ -10,17 +10,16 @@ import io
 import json
 import re
 import requests
-# from pymongo import MongoClient
+import pymongo
 import os
 from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
     
-
-# client = MongoClient("mongodb://your_mongo_server_address:27017/")
-# db = client["your_database_name"]
-# collection = db["your_collection_name"]
+client = pymongo.MongoClient("mongodb://root:examplepassword@mongodb:27017")
+db = client["mongodata"]
+collection = db["your_collection_name"]
 
 origins = [
     "http://localhost:8080",
