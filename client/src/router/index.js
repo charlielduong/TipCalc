@@ -13,10 +13,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "form" */ '../views/FormView.vue')
   },
   {
-    path: '/receipt',
-    name: 'receipt',
-    component: () => import(/* webpackChunkName: "receipt" */ '../views/ReceiptView.vue')
+    path: '/history',
+    name: 'history',
+    component: () => import(/* webpackChunkName: "form" */ '../views/HistoryView.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "form" */ '../views/LoginView.vue')
   }
+
 ]
 
 const router = createRouter({

@@ -1,5 +1,4 @@
 <template>
-  <div class="form">
     <nav class="navbar navbar-expand-lg bg-light">
       <a class="navbar-brand" href="#">i paid for my friends</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -21,48 +20,17 @@
       </div>
     </nav>
 
-    <Form />
+    <div class="login">
+      <h1>Login</h1>
+    </div>
+  </template>
+  
+  <script>
 
-    <footer class="footer mt-auto py-3 bg-light">
-      <div class="container">
-        <span class="text-muted">support@ipaidformyfriends.com</span>
-      </div>
-    </footer>
-  </div>
-</template>
-
-
-<script>
-import Form from '@/components/FormItem.vue'
-
-export default {
-  name: 'FormView',
-  components: {
-    Form
+  
+  export default {
+    name: 'LoginView'
+    
   }
-}
-</script>
-
-<style>
-
-html,
-body {
-  min-height: 100%;
-  background-color: #D9D9D9;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.footer {
-  margin-top: auto;
-  /* Push footer to the bottom */
-}
-
-.bg-light {
-  background-color: #D9D9D9;
-}
-</style>
+  </script>
+  
