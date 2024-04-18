@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 offset-md-3">
+            <div class="col-md-9">
                 <div class="card">
                     <div class="card-body">
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
                                 <h2>I paid for my friends</h2>
 
-                                <label for="numberOfPeople" class="form-label">Number of people splitting the
+                                <label class="form-label">Number of people splitting the
                                     bill</label>
 
                                 <div v-if="formData.names">
@@ -55,34 +55,7 @@
                                     <div v-else>
                                         <button type="submit" class="btn btn-success" @click="nextStep">Next</button>
                                     </div>
-                                    <div>
-                                        <h3>Purchases:</h3>
-                                        <ul v-if="Object.keys(reversedData).length > 0">
-                                            <li v-for="(items, name) in reversedData" :key="name">
-                                                {{ name }}:
-                                                <ul>
-                                                    <li v-for="item in items" :key="item.itemName">{{ item.itemName }} -
-                                                        ${{ item.itemCost }}</li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                        <p v-else>No purchases data available.</p>
-                                    </div>
                                 </div>
-
-
-                                <!-- <h3>{{ this.items }}</h3> -->
-                                <!-- <div class="mb-3" v-if="currentName">
-                                    <label>{{ currentName.display() }}</label>
-
-                                    <div class="item-buttons">
-                                        <div v-for="item in formData.items" :key="index">
-                                            <input type="checkbox" :name="`checkbox_${index}`" /> {{ item.itemName }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <button v-if="!isLastItem" type="button" @click="nextName" :disabled="isLastName">Next Person</button> -->
-
 
                             </div>
                             <div v-else-if="currentStep === 4">
@@ -118,7 +91,32 @@
                     </div>
                 </div>
             </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="receipt">
+                            <h2>receipt</h2>
+                            <div v-if="Object.keys(formData.purchases).length !== 0">
+                                <!-- Render your content here when purchases is not null or empty -->
+                                <div v-for="(item, itemName) in formData.purchases" :key="itemName">
+                                    {{ itemName }}
+                                    <ul>
+                                        <li v-for="(person, index) in item" :key="index">
+                                            {{ person }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                Subtotal: $ {{ subtotal }}
+                            </div>
+                            <div v-else>
+                                <h2>No items added yet</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -143,7 +141,7 @@ export default {
                 fees: 0,
             },
             processedData: {},
-            // numberOfPeople: null,
+
             // currentStep: 1,
             // currentItem: null,
             // currentNameIndex: 0,
@@ -152,7 +150,7 @@ export default {
             // fees: 0,
             // formData: {
             //     names: [''],
-            //     items: [{ itemName: '', itemCost: 0 }],
+            //     items: [{}],
             //     purchases:
             //     {
             //     }
@@ -174,6 +172,11 @@ export default {
                 }
             }
             return reversedData;
+        },
+        subtotal() {
+            // Calculate subtotal by summing up itemCost for each item in formData.items
+            return this.formData.items.reduce((total, item) => total + item.itemCost, 0);
+
         }
     },
     methods: {
@@ -182,6 +185,7 @@ export default {
         },
         nextStep() {
             this.currentStep++;
+            console.log(this.formData.purchases)
         },
         prevStep() {
             this.currentStep--;
@@ -255,5 +259,10 @@ export default {
 .navbar {
     margin-bottom: 0;
     border-radius: 0;
+}
+#receipt {
+    float: inherit;
+    margin-top: 10%;
+    outline-style: dotted;
 }
 </style>
