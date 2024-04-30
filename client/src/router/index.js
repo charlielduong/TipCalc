@@ -18,6 +18,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "form" */ '../views/HistoryView.vue')
   },
   {
+    path: '/design',
+    name: 'design',
+    component: () => import(/* webpackChunkName: "form" */ '../views/DesignView.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "form" */ '../views/LoginView.vue')

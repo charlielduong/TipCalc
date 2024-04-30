@@ -1,0 +1,15 @@
+
+
+Trying to format the form to a the wireframe
+
+- Need to figure out how to size things properly within css
+    - https://www.youtube.com/watch?v=fzZTvLmmTzM -> CSS sizing
+    - A video on how to lay things out
+    - A video on how to make sure boxes respond to increases in size properly
+    - A video on how to makae sure things are spaced out properly between each other
+    - A vide on how to implement these with bootstrap
+
+    - Probably need to make a separate HTML/CSS file to figure these things out, then once I can make a blueprint of it I then transition into the project.
+    Start with just formatting divs properly, for them to respond to changes in size properly, then add it to the form
+
+    https://www.youtube.com/watch?v=i1FeOOhNnwU

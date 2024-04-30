@@ -1,15 +1,11 @@
 <template>
-        <div class="container" style="min-height: 87vh;">
+        <div class="container">
             <div class="row">
-            <div class="col-12">
-                <div class="card" style="width: 800px; height: 400px;">
+                <div class="card col-8">
                     <div class="card-body">
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
                                 <h2 class="form-h2">I paid for my friends</h2>
-
-                                <label class="form-label">Number of people splitting the
-                                    bill</label>
 
                                 <div v-if="formData.names">
                                     <div v-for="index in formData.names.length" :key="index">
@@ -90,9 +86,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card">
+                <div class="card col-4">
                     <div class="card-body">
                         <div id="receipt">
                             <h2>receipt</h2>
@@ -114,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            
         </div>
 
     </div>
@@ -258,10 +252,21 @@ export default {
 </script>
 
 <style scoped>
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* * {
+    margin: 0;
+    padding: 0;
+} */
 .navbar {
     margin-bottom: 0;
     border-radius: 0;
 }
+
 #receipt {
     float: inherit;
     margin-top: 10%;
@@ -270,13 +275,14 @@ export default {
 
 .container {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    min-height: 100vh;
 }
 
 .card {
     background-color: #F3F3F3;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.form-control {
+    margin-bottom: 1em;
 }
 </style>
