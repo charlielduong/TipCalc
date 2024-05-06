@@ -1,7 +1,7 @@
 <template>
         <div class="container">
             <div class="row">
-                <div class="card col-8">
+                <div class="card">
                     <div class="card-body">
                         <form @submit.prevent="submitForm" novalidate>
                             <div v-if="currentStep === 1">
@@ -9,8 +9,8 @@
 
                                 <div v-if="formData.names">
                                     <div v-for="index in formData.names.length" :key="index">
-                                        <label class="form-label">Person {{ index }} name:</label>
-                                        <input type="text" class="form-control" v-model="formData.names[index - 1]"
+                                        <!-- <label class="form-label">Person {{ index }} name:</label> -->
+                                        <input type="text" class="form-control" v-model="formData.names[index - 1]" placeholder="Person {{ index }} name"
                                             required>
                                     </div>
                                 </div>
@@ -116,9 +116,6 @@
 
 <script>
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.css';
-// import BootstrapVue from 'bootstrap-vue'
-// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 export default {
     data() {

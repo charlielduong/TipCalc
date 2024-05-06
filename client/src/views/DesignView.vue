@@ -7,8 +7,6 @@
   </template>
   
 <script>
-import 'bootstrap/dist/css/bootstrap.css';
-
     export default {
         name: 'DesignView',
     }
@@ -17,8 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 <style>
 
 .design {
-    background-color: gray;
-    height: 90vh;
+    background-color: var(--white-color);
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;

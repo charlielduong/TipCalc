@@ -16,9 +16,6 @@ COPY package-lock.json .
 # Install dependencies
 RUN npm install
 
-# Install bootstrap
-RUN npm install bootstrap
-
 # Copy the rest of the application code
 COPY . .
 

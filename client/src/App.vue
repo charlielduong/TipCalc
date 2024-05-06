@@ -1,68 +1,275 @@
 <template>
 
-<nav class="navbar navbar-expand-lg bg-light">
-      <a class="navbar-brand" href="#">i paid for my friends</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="http://localhost:8080/form">home</a>
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#" class="nav__logo">I Paid For My Friends</a>
+
+      <div class="nav__menu" id="nav-menu">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <a href="http://localhost:8080/form" class="nav__link">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8080/history">history</a>
+
+          <li class="nav__item">
+            <a href="http://localhost:8080/history" class="nav__link">History</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8080/login">login</a>
+
+          <li class="nav__item">
+            <a href="#" class="nav__link">Contact Us</a>
           </li>
         </ul>
       </div>
+      <div class="nav__actions">
+        <!-- Sign Up -->
+        <a href="" class="nav__register">Sign In</a>
+        <!-- Log In -->
+        <a href="" class="nav__login">Log In</a>
+      </div>
     </nav>
+  </header>
 
   <div id="app">
     <router-view />
   </div>
-
-  <footer class="footer py-3 bg-light">
-      <div class="container">
-        <span class="text-muted">support@ipaidformyfriends.com</span>
-      </div>
-    </footer>
 </template>
 
 
 <style>
+/*=============== GOOGLE FONTS ===============*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-/* body {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
+/*=============== VARIABLES CSS ===============*/
+:root {
+  --header-height: 3.5rem;
+
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  /* 
+      Change favorite color
+      Default: hsl(255, 90%, 60%)
+      Orange: hsl(14, 90%, 60%) - Blue: hsl(210, 90%, 50%)
+      Pink: hsl(356, 100%, 65%) - Green: hsl(162, 90%, 40%)
+
+      For more colors visit: https://colors.dopely.top/color-pedia
+      -> Choose any color 
+      -> Click on tab (Color Conversion)
+      -> Copy the color mode (HSL)
+  */
+  --hue: 227;
+  --first-color: hsl(var(--hue), 52%, 52%);
+  --first-color-alt: hsl(var(--hue), 82%, 56%);
+  --first-color-light: hsl(var(--hue), 40%, 80%);
+  --title-color: hsl(var(--hue), 24%, 16%);
+  --text-color: hsl(var(--hue), 8%, 45%);
+  --text-color-light: hsl(var(--hue), 8%, 60%);
+  --white-color: hsl(0, 0%, 100%);
+  --body-color: hsl(0, 0%, 100%);
+  --container-color: hsl(0, 0%, 100%);
+  --shadow-color: hsla(var(--hue), 90%, 30%, .1);
+
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --body-font: "Inter", sans-serif;
+  --biggest-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --normal-font-size: .938rem;
+  --small-font-size: .813rem;
+  --smaller-font-size: .75rem;
+
+  /*========== Font weight ==========*/
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+
+  /*========== z index ==========*/
+  --z-tooltip: 10;
+  --z-fixed: 100;
+  --z-modal: 1000;
 }
 
-body > * { 
-    flex: 1;
+/*========== Responsive typography ==========*/
+@media screen and (min-width: 1150px) {
+  :root {
+    --biggest-font-size: 4.5rem;
+    --h1-font-size: 2.25rem;
+    --h2-font-size: 1.5rem;
+    --h3-font-size: 1.25rem;
+    --normal-font-size: 1.125rem;
+    --small-font-size: .875rem;
+    --smaller-font-size: .813rem;
+  }
 }
 
-body > .footer {
-    align-self: flex-end;
-} */
+/*=============== BASE ===============*/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
 
-#app {
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+input,
+textarea,
+button {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+}
+
+body {
+  background-color: var(--body-color);
+  color: var(--text-color);
+  transition: background-color .4s;
+}
+
+input,
+button,
+textarea {
+  border: none;
+  outline: none;
+}
+
+h1, h2, h3, h4 {
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/*=============== REUSABLE CSS CLASSES ===============*/
+.container {
+  max-width: 1120px;
+  margin-inline: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section {
+  padding-block: 5rem 1rem;
+}
+.section__title {
+  font-size: var(--h1-font-size);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.main {
+  overflow: hidden;
+}
+
+/*=============== HEADER & NAV ===============*/
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--body-color);
+  z-index: var(--z-fixed);
+  transition: background-color .4s, box-shadow .4s;
+  border-bottom: 1px solid var(--text-color-light);
+}
+.nav {
+  position: relative;
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-semi-bold);
+}
+
+.nav__logo {
+  color: var(--title-color);
+  transition: color .4s;
+  font-size: var(--h2-font-size);
+}
+
+.nav__menu {
+  margin-right: auto;
+  margin-left: 2rem;
+}
+.nav__list {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1.25rem;
+  text-align: center;
+}
+
+.nav__link {
+  color: var(--text-color-light);
+  transition: color .4s;
+}
+
+.nav__link:hover {
+  color: var(--first-color);
+}
+
+.nav__register,
+.nav__login {
+  display: inline-flex;
+  /* font-size: 1.25rem; */
+  cursor: pointer;
+}
+
+.nav__actions {
+  display: flex;
+  column-gap: 1.25rem;
+}
+
+.nav__register {
+  color: var(--title-color);
+  /* color: var(--white-color); */
+}
+
+.nav__login {
+  color: var(--title-color);
+}
+
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
+} */
 
-.footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  /* padding: 1rem; */
-}
+@media screen and (min-width: 1150px){
+  .container {
+    margin-inline: auto;
+  }
 
+  .section {
+    /* padding-block: 7rem  2rem; */
+  }
+
+  .section__title {
+    /* margin-bottom: 3.5rem; */
+  }
+
+  .nav {
+    /* height: calc(var(--header-height) + 2rem); */
+    /* column-gap: 3rem; */
+    margin-top: 1rem;
+  }
+}
 </style>
