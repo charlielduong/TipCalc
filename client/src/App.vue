@@ -1,8 +1,13 @@
 <template>
 
+  <!-- HEADER -->
   <header class="header" id="header">
     <nav class="nav container">
-      <a href="#" class="nav__logo">I Paid For My Friends</a>
+      <div class="nav__logo">
+        <i class="ri-cash-line nav__logo-icon"></i>
+        <a href="#" class="nav__logo-label">Payback</a>
+      </div>
+
 
       <div class="nav__menu" id="nav-menu">
         <ul class="nav__list">
@@ -31,6 +36,15 @@
   <div id="app">
     <router-view />
   </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__container container grid">
+      <div class="footer__content grid">
+        <a href="http://localhost:8080/form" class="footer__logo">Payback.</a>
+      </div>
+    </div>
+  </footer>
 </template>
 
 
@@ -55,17 +69,18 @@
       -> Click on tab (Color Conversion)
       -> Copy the color mode (HSL)
   */
-  --hue: 227;
-  --first-color: hsl(var(--hue), 52%, 52%);
-  --first-color-alt: hsl(var(--hue), 82%, 56%);
-  --first-color-light: hsl(var(--hue), 40%, 80%);
+  --hue: 148;
+  --first-color: hsl(var(--hue), 50%, 50%);
+  --first-color-alt: hsl(var(--hue), 35%, 44%);
+  --first-color-light: hsl(var(--hue), 56%, 70%);
   --title-color: hsl(var(--hue), 24%, 16%);
-  --text-color: hsl(var(--hue), 8%, 45%);
-  --text-color-light: hsl(var(--hue), 8%, 60%);
+  --text-color: hsl(var(--hue), 43%, 4%);
+  --text-color-light: hsl(0, 0%, 50%);
+  --text-color-lightest: hsl(0, 0%, 80%);
   --white-color: hsl(0, 0%, 100%);
-  --body-color: hsl(0, 0%, 100%);
-  --container-color: hsl(0, 0%, 100%);
-  --shadow-color: hsla(var(--hue), 90%, 30%, .1);
+  --body-color: hsl(var(--hue), 40%, 98%);
+  --container-color: hsl(0, 0%, 97%);
+  --shadow-color: hsla(var(--hue), 43%, 11%, .1);
 
   /*========== Font and typography ==========*/
   /*.5rem = 8px | 1rem = 16px ...*/
@@ -122,7 +137,7 @@ button {
 }
 
 body {
-  background-color: var(--body-color);
+  background-color: var(--white-color);
   color: var(--text-color);
   transition: background-color .4s;
 }
@@ -134,7 +149,10 @@ textarea {
   outline: none;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   color: var(--title-color);
   font-weight: var(--font-semi-bold);
 }
@@ -167,6 +185,7 @@ img {
 .section {
   padding-block: 5rem 1rem;
 }
+
 .section__title {
   font-size: var(--h1-font-size);
   text-align: center;
@@ -183,31 +202,45 @@ img {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: var(--body-color);
+  background-color: var(--white-color);
   z-index: var(--z-fixed);
   transition: background-color .4s, box-shadow .4s;
-  border-bottom: 1px solid var(--text-color-light);
+  border-bottom: 1px solid var(--text-color-lightest);
 }
+
 .nav {
   position: relative;
   height: var(--header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--normal-font-size);
+  font-size: var(--small-font-size);
   font-weight: var(--font-semi-bold);
+  padding-bottom: 2em;
+  padding-top: 2rem;
 }
 
 .nav__logo {
-  color: var(--title-color);
+  display: flex;
+  align-items: center;
+  column-gap: 0.75rem;
   transition: color .4s;
-  font-size: var(--h2-font-size);
+  font-size: var(--h3-font-size);
+}
+
+.nav__logo-icon {
+  color: var(--first-color-alt);
+}
+
+.nav__logo-label {
+  color: var(--title-color)
 }
 
 .nav__menu {
   margin-right: auto;
   margin-left: 2rem;
 }
+
 .nav__list {
   display: flex;
   flex-direction: row;
@@ -227,6 +260,7 @@ img {
 .nav__register,
 .nav__login {
   display: inline-flex;
+  align-items: center;
   /* font-size: 1.25rem; */
   cursor: pointer;
 }
@@ -242,7 +276,30 @@ img {
 }
 
 .nav__login {
-  color: var(--title-color);
+  color: var(--white-color);
+  background-color: var(--first-color-light);
+  padding: .75rem 1rem;
+  border-radius: 10px;
+}
+
+/*=============== FOOTER ===============*/
+.footer {
+    background-color: var(--first-color);
+}
+
+.footer__container {
+    padding-block: 4rem 2rem;
+    text-align: center;
+    row-gap: 5rem;
+}
+
+.footer__content {
+  row-gap: 2rem;
+}
+
+.footer__content a,
+.footer__copy {
+  color: var(--white-color);
 }
 
 /* #app {
@@ -253,17 +310,17 @@ img {
   color: #2c3e50;
 } */
 
-@media screen and (min-width: 1150px){
+@media screen and (min-width: 1150px) {
   .container {
     margin-inline: auto;
   }
 
   .section {
-    /* padding-block: 7rem  2rem; */
+    padding-block: 7rem 2rem;
   }
 
   .section__title {
-    /* margin-bottom: 3.5rem; */
+    margin-bottom: 3.5rem;
   }
 
   .nav {
