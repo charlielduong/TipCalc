@@ -41,7 +41,7 @@
   <footer class="footer">
     <div class="footer__container container grid">
       <div class="footer__content grid">
-        <a href="http://localhost:8080/form" class="footer__logo">Payback.</a>
+        <a href="http://localhost:8080/form" class="footer__logo">Payback</a>
       </div>
     </div>
   </footer>

@@ -3,23 +3,20 @@
 
         <section class="form section">
             <div class="form__container container grid">
-                <form action="" class="main__form grid" id="main-form">
-                    
-                </form>
+                <form action="" class="form__main grid" id="main-form">
+                    <div class="form__screen">
+                        <div class="form__screen-menu">
 
-                <!--  Form HTML-->
-                <!-- <div class="form__screen">
-                    <div class="form__screen-menu">
+                        </div>
+                    </div>
+
+                    <div class="form__receipt grid">
+                        <h1 class="form__receipt-logo">Receipt</h1>
+                        <ul class="form__receipt-items"></ul>
+                        <div class="form__receipt-totals"></div>
 
                     </div>
-                </div> -->
-
-                <!-- Receipt-View HTML -->
-                <!-- <div class="form__receipt container grid">
-                    <h1 class="form__receipt-logo">Receipt</h1>
-                    <ul class="form__receipt-list">
-                    </ul>
-                </div> -->
+                </form>
             </div>
         </section>
     </div>
@@ -39,35 +36,44 @@ export default {
 
 .form__container {
     background-color: var(--container-color);
-    padding-bottom: 4rem;
-    /* width: 65rem;
-    height: 40rem; */
+    padding: 2rem;
     border-radius: 10px;
     border: 0.5px solid var(--text-color-lightest);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    /* display: flex; */
+}
+
+.form__main {
+    width: 100%;  
+    height: 70dvh;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .form__screen {
-    width: 72%;
-    height: 90%;
-    background-color: transparent;
-    margin-left: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: var(--white-color);
+    flex: 65%;
+    margin: 7% 12%;
+    border-radius: 10px;
+    border: 0.5px solid var(--text-color-lightest);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+.form__receipt {
+    background-color: var(--white-color);
+    flex: 35%;
+    border-radius: 10px;
+    border: 0.5px solid var(--text-color-lightest);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.form__screen-menu {
+/* .form__screen-menu {
     width: 68%;
     height: 69%;
     background-color: var(--white-color);
     border: 0.3px solid var(--text-color-lightest);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-}
+} */
+
 
 /* .form__receipt {
     width: 27%;
