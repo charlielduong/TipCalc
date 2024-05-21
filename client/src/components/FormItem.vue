@@ -134,20 +134,6 @@ export default {
                 fees: 0,
             },
             processedData: {},
-
-            // currentStep: 1,
-            // currentItem: null,
-            // currentNameIndex: 0,
-            // tax: 0,
-            // tip: 0,
-            // fees: 0,
-            // formData: {
-            //     names: [''],
-            //     items: [{}],
-            //     purchases:
-            //     {
-            //     }
-            // }
         };
     },
     computed: {
@@ -190,7 +176,6 @@ export default {
         },
         addPerson() {
             this.formData.names.push("");
-            this.numberOfPeople++;
         },
         removePerson() {
             this.formData.names.splice(-1, 1)
@@ -216,7 +201,6 @@ export default {
                 purchasesList.push(personName); // Add personName to purchasesList if selected and not already present
             } else if (!item.selected && index !== -1) {
                 purchasesList.splice(index, 1); // Remove personName from purchasesList if not selected and present
-
             }
         },
         checkTipTaxandFees() {
