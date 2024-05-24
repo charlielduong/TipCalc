@@ -1,53 +1,34 @@
 <template>
 
-  <!-- HEADER -->
-  <header class="header" id="header">
-    <nav class="nav container">
-      <div class="nav__logo">
-        <i class="ri-cash-line nav__logo-icon"></i>
-        <a href="#" class="nav__logo-label">Payback</a>
-      </div>
+  <!-- Header / NavBar -->
+  <NavBar />
 
-
-      <div class="nav__menu" id="nav-menu">
-        <ul class="nav__list">
-          <li class="nav__item">
-            <a href="http://localhost:8080/form" class="nav__link">Home</a>
-          </li>
-
-          <li class="nav__item">
-            <a href="http://localhost:8080/history" class="nav__link">History</a>
-          </li>
-
-          <li class="nav__item">
-            <a href="#" class="nav__link">Contact Us</a>
-          </li>
-        </ul>
-      </div>
-      <div class="nav__actions">
-        <!-- Sign Up -->
-        <a href="" class="nav__register">Sign In</a>
-        <!-- Log In -->
-        <a href="" class="nav__login">Log In</a>
-      </div>
-    </nav>
-  </header>
-
+  <!-- App -->
   <div id="app">
     <router-view />
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer__container container grid">
-      <div class="footer__content grid">
-        <a href="http://localhost:8080/form" class="footer__logo">Payback.</a>
-      </div>
-    </div>
-  </footer>
+  <!-- Footer -->
+  <Footer />
+  
 </template>
 
+<script>
+import NavBar from './components/NavBar.vue';
+import Footer from './components/Footer.vue';
 
+  export default {
+    components: {
+      NavBar,
+      Footer
+    },
+    data() {
+      return {
+
+      }
+    }
+}
+</script>
 <style>
 /*=============== GOOGLE FONTS ===============*/
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -69,8 +50,8 @@
       -> Click on tab (Color Conversion)
       -> Copy the color mode (HSL)
   */
-  --hue: 148;
-  --first-color: hsl(var(--hue), 50%, 50%);
+  --hue: 150;
+  --first-color: hsl(var(--hue), 42%, 62%);
   --first-color-alt: hsl(var(--hue), 35%, 44%);
   --first-color-light: hsl(var(--hue), 56%, 70%);
   --title-color: hsl(var(--hue), 24%, 16%);
@@ -78,6 +59,8 @@
   --text-color-light: hsl(0, 0%, 50%);
   --text-color-lightest: hsl(0, 0%, 80%);
   --white-color: hsl(0, 0%, 100%);
+  --black-color: hsl(0,0%,20%);
+  --gray-color: hsl(216,16%,84%);
   --body-color: hsl(var(--hue), 40%, 98%);
   --container-color: hsl(0, 0%, 97%);
   --shadow-color: hsla(var(--hue), 43%, 11%, .1);
@@ -90,7 +73,7 @@
   --h2-font-size: 1.25rem;
   --h3-font-size: 1rem;
   --normal-font-size: .938rem;
-  --small-font-size: .813rem;
+  --small-font-size: .883rem;
   --smaller-font-size: .75rem;
 
   /*========== Font weight ==========*/
@@ -105,7 +88,7 @@
 }
 
 /*========== Responsive typography ==========*/
-@media screen and (min-width: 1150px) {
+/* @media screen and (min-width: 1150px) {
   :root {
     --biggest-font-size: 4.5rem;
     --h1-font-size: 2.25rem;
@@ -115,7 +98,7 @@
     --small-font-size: .875rem;
     --smaller-font-size: .813rem;
   }
-}
+} */
 
 /*=============== BASE ===============*/
 * {
@@ -184,6 +167,11 @@ img {
 
 .section {
   padding-block: 5rem 1rem;
+  height: 100vh;
+  width: 100%;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
 }
 
 .section__title {
@@ -196,111 +184,7 @@ img {
   overflow: hidden;
 }
 
-/*=============== HEADER & NAV ===============*/
-.header {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background-color: var(--white-color);
-  z-index: var(--z-fixed);
-  transition: background-color .4s, box-shadow .4s;
-  border-bottom: 1px solid var(--text-color-lightest);
-}
 
-.nav {
-  position: relative;
-  height: var(--header-height);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--small-font-size);
-  font-weight: var(--font-semi-bold);
-  padding-bottom: 2em;
-  padding-top: 2rem;
-}
-
-.nav__logo {
-  display: flex;
-  align-items: center;
-  column-gap: 0.75rem;
-  transition: color .4s;
-  font-size: var(--h3-font-size);
-}
-
-.nav__logo-icon {
-  color: var(--first-color-alt);
-}
-
-.nav__logo-label {
-  color: var(--title-color)
-}
-
-.nav__menu {
-  margin-right: auto;
-  margin-left: 2rem;
-}
-
-.nav__list {
-  display: flex;
-  flex-direction: row;
-  column-gap: 1.25rem;
-  text-align: center;
-}
-
-.nav__link {
-  color: var(--text-color-light);
-  transition: color .4s;
-}
-
-.nav__link:hover {
-  color: var(--first-color);
-}
-
-.nav__register,
-.nav__login {
-  display: inline-flex;
-  align-items: center;
-  /* font-size: 1.25rem; */
-  cursor: pointer;
-}
-
-.nav__actions {
-  display: flex;
-  column-gap: 1.25rem;
-}
-
-.nav__register {
-  color: var(--title-color);
-  /* color: var(--white-color); */
-}
-
-.nav__login {
-  color: var(--white-color);
-  background-color: var(--first-color-light);
-  padding: .75rem 1rem;
-  border-radius: 10px;
-}
-
-/*=============== FOOTER ===============*/
-.footer {
-    background-color: var(--first-color);
-}
-
-.footer__container {
-    padding-block: 4rem 2rem;
-    text-align: center;
-    row-gap: 5rem;
-}
-
-.footer__content {
-  row-gap: 2rem;
-}
-
-.footer__content a,
-.footer__copy {
-  color: var(--white-color);
-}
 
 /* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
