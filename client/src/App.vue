@@ -61,6 +61,8 @@ import Footer from './components/Footer.vue';
   --white-color: hsl(0, 0%, 100%);
   --black-color: hsl(0,0%,20%);
   --gray-color: hsl(216,16%,84%);
+  --medium-gray-color: hsl(0,0%,65%);
+  --dark-gray-color: hsl(215,18%,34%);
   --body-color: hsl(var(--hue), 40%, 98%);
   --container-color: hsl(0, 0%, 97%);
   --shadow-color: hsla(var(--hue), 43%, 11%, .1);
@@ -75,11 +77,13 @@ import Footer from './components/Footer.vue';
   --normal-font-size: .938rem;
   --small-font-size: .883rem;
   --smaller-font-size: .75rem;
+  --smallest-font-size: .7rem;
 
   /*========== Font weight ==========*/
   --font-regular: 400;
   --font-medium: 500;
   --font-semi-bold: 600;
+  --font-bold: 700;
 
   /*========== z index ==========*/
   --z-tooltip: 10;

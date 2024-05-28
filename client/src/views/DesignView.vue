@@ -42,7 +42,7 @@
                             <ul class="form__list">
                                 <div class="form__list-names" v-for="(item, index) in formData.items" :key="index">
                                     <li class="form__list-names-{{ index }}" @click="deleteItem(index)">{{ item.itemName
-                                        }} - {{ item.itemCost }}
+                                        }} | ${{ item.itemCost }}
                                     </li>
                                 </div>
                             </ul>
@@ -62,9 +62,9 @@
                                 <h2 class="form__screen-text"> purchase?</h2>
                             </div>
 
-                            <div class="form__group" v-if="index === currentNameIndex">
+                            <div class="form__group form__group-name-to-item" v-if="index === currentNameIndex">
                                 <div class="form__list-purchases" v-for="item in formData.items">
-                                    <label class="checkbox__label">
+                                    <label class="checkbox__label" :class="{ 'checked': item.selected }">
                                         <input class="checkbox__input" type="checkbox"
                                             @change="updatePurchases(item, name)" :value="item"
                                             v-model="item.selected" />
@@ -73,9 +73,10 @@
                                 </div>
                             </div>
                         </template>
-                        <div class="button-container">
-                            <button class="form__group-button button" @click.prevent="previousPerson">Previous</button>
-                            <button class="form__group-button button" @click.prevent="nextPerson">Next</button>
+                        <div class="button__container">
+                            <button class="form__container-button form__container-button-previous button"
+                                @click.prevent="previousPerson">Previous</button>
+                            <button class="form__container-button form__container-button-next button" @click.prevent="nextPerson">Next</button>
                         </div>
                     </form>
                 </div>
@@ -91,8 +92,8 @@
                         </div>
                         <div class="form__group">
                             <label class="checkbox__label" v-for="name in formData.names" :key="name">
-                                <input class="checkbox__input" type="checkbox" @change="updatePurchases(item, name)" :value="name"
-                                    v-model="item.selected" />
+                                <input class="checkbox__input" type="checkbox" @change="updatePurchases(item, name)"
+                                    :value="name" v-model="item.selected" />
                                 <span class="label__text">{{ name }}</span>
                             </label>
                         </div>
@@ -101,12 +102,12 @@
 
                 <!-- FORM TIP AND TAX INPUT -->
                 <div class="form__screen" v-else-if="currentFormStep === 5">
-                    <h2>Enter Tip, Tax, and Other Fees</h2>
+                    <h2 class="form__label">Enter Tip, Tax, and Other Fees</h2>
                     <form action="" class="receipt__form" id="receipt-form">
-                        <div class="form__box">
-                            <input class="form__item" type="text" placeholder="Enter Tip" style="display: block;"
+                        <div class="form__box form__box-tip-tax">
+                            <input class="form__item form__item-tip" type="text" placeholder="Enter Tip" style="display: block;"
                                 v-model="this.formData.tip" />
-                            <input class="form__item" type="text" placeholder="Enter Tax" style="display: block;"
+                            <input class="form__item form__item-tax" type="text" placeholder="Enter Tax" style="display: block;"
                                 v-model="this.formData.tax" />
                         </div>
                         <!-- <button class="form__group-button button" @click.prevent="nextStep">Next</button> -->
@@ -115,41 +116,65 @@
 
                 <!-- FORM SUMMARY -->
                 <div class="form__screen" v-else="currentFormStep === 6">
-                    <h1>Success!</h1>
+                    <h1 class="form__label">Success!</h1>
                     <div v-for="(amount, name) in amountsOwed" :key="name">
                         <p>{{ name }} owes ${{ amount.toFixed(2) }}</p>
                     </div>
                 </div>
 
                 <!-- FORM NEXT/PREV BUTTON -->
-                <div class="button-container" v-if="currentFormStep < 6 && currentFormStep !== 3">
-                    <button class="form__group-button button" @click.prevent="previousStep"
+                <div class="button__container" v-if="currentFormStep < 6 && currentFormStep !== 3">
+                    <button class="form__group-button form__group-button-previous button" @click.prevent="previousStep"
                         v-if="currentFormStep > 1">Previous</button>
-                    <button class="form__group-button button" @click.prevent="nextStep">Next</button>
+                    <button class="form__group-button form__group-button-next button" @click.prevent="nextStep">Next</button>
                 </div>
             </div>
 
             <!-- FORM RECEIPT -->
-            <div class="form__receipt" v-if="currentFormStep >= 2">
-                <h1 class="form__receipt-logo">Receipt</h1>
+            <div class="receipt__container container">
+                <div class="form__receipt" v-if="currentFormStep >= 1">
+                    <h1 class="form__receipt-logo">Receipt</h1>
+                    <div class="form__receipt-items">
+                        <div class="form__receipt-item-entry" v-for="item in receiptItems" :key="item.itemName">
+                            <div class="form__receipt-item">
+                                <div class="form__receipt-item-name">{{ item.itemName }}</div>
+                                <div class="form__receipt-buyers">
+                                    <ul v-if="item.buyers.length > 0">
+                                        <li class="form__receipt-buyer" v-for="buyer in item.buyers" :key="buyer">{{
+                    buyer
+                }}
+                                        </li>
+                                    </ul>
+                                </div>
 
-                <div v-for="item in receiptItems" :key="item.itemName">
-                    <div style="font-weight: bold;" class="form__receipt-item">{{ item.itemName }} - ${{ item.itemCost.toFixed(2) }}</div>
-                    <ul class="form__receipt-buyers" v-if="item.buyers.length > 0" style="margin-left: 20px; list-style-type: circle;">
-                        <li class="form__receipt-buyer" v-for="buyer in item.buyers" :key="buyer">{{ buyer }}</li>
-                    </ul>
-                </div>
+                            </div>
+                            <div class="form__receipt-price">${{ item.itemCost.toFixed(2) }}</div>
+                        </div>
+                    </div>
 
-                <div class="form__receipt-summary" v-if="currentFormStep === 6 || currentFormStep === 5">
-                    <hr style="margin: 10px 0;">
-                    <div class="form__receipt-subtotal">Subtotal: ${{ receiptTotals.subtotal.toFixed(2) }}</div>
-                    <div class="form__receipt-tip">Tip: ${{ receiptTotals.tip.toFixed(2) }}</div>
-                    <div class="form__receipt-tax">Tax: ${{ receiptTotals.tax.toFixed(2) }}</div>
-                    <div class="form__receipt-total" style="font-weight: bold;">Total: ${{ receiptTotals.total.toFixed(2) }}</div>
+                    <div class="form__receipt-summary">
+                        <div class="form__receipt-subtotal">
+                            <div class="form__receipt-subtotal-title">Subtotal</div>
+                            <div class="form__Receipt-subtotal-price">${{ receiptTotals.subtotal.toFixed(2) }}</div>
+                        </div>
+                        <div class="form__receipt-tip-tax" v-if="currentFormStep === 5 || currentFormStep === 6">
+                            <div class="form__receipt-tip">
+                                <div class="form__receipt-tip-title">Tip</div>
+                                <div class="form__receipt-tip-price">${{ receiptTotals.tip.toFixed(2) }}</div>
+                            </div>
+                            <div class="form__receipt-tax">
+                                <div class="form__receipt-tax-title">Tax</div>
+                                <div class="form__receipt-tax-price">${{ receiptTotals.tax.toFixed(2) }}</div>
+                            </div>
+                        </div>
+
+                        <div class="form__receipt-total">
+                            <div class="form_receipt-total-title">Total</div>
+                            <div class="form__receipt-total-price">${{receiptTotals.total.toFixed(2) }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
 
         </section>
     </div>
@@ -181,7 +206,7 @@ export default {
         }
     },
     computed: {
-        
+
         // In "FORM NAME TO ITEM INPUT," keeps track of the current person being processed.
         currentName() {
             return this.formData.names[this.currentNameIndex];
@@ -257,7 +282,7 @@ export default {
     methods: {
 
         // Moves the form to the next phase.
-        nextStep() { 
+        nextStep() {
             this.currentFormStep++;
         },
 
@@ -354,20 +379,30 @@ export default {
 </script>
 
 <style>
+/* BUTTON */
 button {
     padding: .75rem 1rem;
     border-radius: 8px;
     font-weight: var(--font-medium);
 }
 
-/* Acts as a "main" */
-.design {
-    /* overflow: hidden; */
+.button__container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
-form__box {
-    display: flex;
-    justify-content: flex-end;
+.form__group-button {
+    background-color: var(--first-color);
+    color: var(--white-color);
+    width: 48%;
+    transition: background-color 0.4s;
+}
+
+.form__group-button:hover {
+    cursor: pointer;
+    background-color: var(--first-color-alt);
+
 }
 
 .form__box-button {
@@ -382,37 +417,78 @@ form__box {
     background-color: var(--first-color-alt);
 }
 
-.form__container {
-    background-color: transparent;
-    grid-template-columns: 2fr 1fr;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex: 0 0 50%;
-}
-
-.form__group-button {
+.form__container-button {
     color: var(--white-color);
     padding: .75rem 1rem;
     background-color: var(--first-color);
-    transition: opacity 0.3s ease-in-out, background-color .3s;
+    transition: background-color .4s;
     margin-top: 1rem;
+    width: 48%;
 }
 
-.form__group-button:hover {
+.form__container-button:hover {
     cursor: pointer;
     background-color: var(--first-color-alt);
 }
 
-.form__screen {
-    grid-column: 1;
+.form__container-button-previous {
+    background-color: var(--medium-gray-color);
+}
+
+.form__container-button-previous:hover {
+    background-color: hsl(0,0%,45%);
+}
+
+.form__group-button-previous {
+    background-color: var(--medium-gray-color);
+}
+
+.form__group-button-previous:hover {
+    background-color: hsl(0,0%,45%);
+
+}
+
+/* Acts as a "main" */
+.design {
+    overflow: hidden;
+}
+
+/* FORM */
+.form.section {
+    display: flex;
+    /* justify-content: space-evenly; */
+
+    
+}
+
+.form__container {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
     background-color: transparent;
+    /* grid-template-columns: 2fr 1fr; */
+    /* align-items: center; */
     flex-grow: 2;
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+
+.form__box {
+    display: flex;
+}
+
+/* TODO: Fix the spacing between form items (the inputs)
+uncommenting fixes the spacing, but then tip/tax box doesn't space properly */
+.form__box .form__item {
+    /* margin: auto; */
+}
+
+.form__screen {
+    background-color: transparent;
+    text-align: center;
 }
 
 .form__receipt {
-    flex-grow: 1;
-    grid-column: 2;
     background-color: var(--white-color);
     border-radius: 8px;
     border: 1px solid var(--gray-color);
@@ -437,10 +513,18 @@ form__box {
     width: 40%;
 }
 
+.form__item-tip {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.form__item-tax {
+    width: 100%;
+}
 .form__label {
     display: flex;
     font-size: var(--h1-font-size);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .form__label-name {
@@ -453,42 +537,23 @@ form__box {
     justify-content: space-evenly;
     flex-wrap: wrap;
     gap: 1rem;
-    /* Vertical Gap */
-    /* width: 100%; */
+    margin-bottom: 2rem;
 }
 
-/* @keyframes shake {
-    0% {
-        transform: translateX(0);
-    }
+.form__group-name-to-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.form__list-purchases {
 
-    10%,
-    90% {
-        transform: translateX(-2px);
-    }
-
-    20%,
-    80% {
-        transform: translateX(4px);
-    }
-
-    30%,
-    50%,
-    70% {
-        transform: translateX(-8px);
-    }
-
-    40%,
-    60% {
-        transform: translateX(8px);
-    }
-} */
+}
 
 .form__list-names {
     flex: 0 0 auto;
     background-color: var(--black-color);
     color: var(--white-color);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: .75rem 1rem;
     transition: opacity 0.3s ease-in-out, background-color .3s;
     font-size: var(--small-font-size);
@@ -496,13 +561,12 @@ form__box {
 }
 
 .form__list-names:hover {
-    /* animation: shake 0.5s; */
     opacity: 0.5;
     cursor: pointer;
 }
 
-.form__box .form__item {
-    margin-right: 1.5rem;
+.form__box-tip-tax {
+    display: block;
 }
 
 label {
@@ -514,7 +578,100 @@ label {
     appearance: none;
 }
 
-/* Hide the default checkbox */
+.label__text {
+    font-weight: var(--font-medium);
+}
+
+/* RECEIPT */
+.receipt__container {
+    display: flex;
+    flex-grow: 1;
+    /* flex-direction: column; */
+    justify-content: center;
+    height: 80%;
+    font-weight: var(--font-regular);
+}
+
+.form__receipt {
+    /* padding-left: 5rem;
+    padding-right: 5rem; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: auto;
+}
+
+.form__receipt-items {
+    height: 100%;
+}
+
+.form__receipt-logo {
+    padding-left: 5rem;
+    padding-right: 5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--gray-color);
+    padding-bottom: 1rem;
+}
+
+.form__receipt-item-entry {
+    display: flex;
+    font-weight: var(--font-semi-bold);
+    color: var(--dark-gray-color);
+    justify-content: space-between;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form__receipt-buyers {
+    width: 100%;
+    margin-left: 20px;
+    font-weight: var(--font-regular);
+    margin-top: .5rem;
+    font-size: var(--smallest-font-size);
+}
+/* 
+.form__receipt-buyers ul {
+    display: flex;
+    justify-content: space-evenly;
+} */
+
+.form__receipt-total {
+    font-weight: bold;
+    color: var(--first-color);
+    font-size: var(--h2-font-size);
+    display: flex;
+    justify-content: space-between;
+}
+
+.form__receipt-tax {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: var(--dark-gray-color);
+}
+
+.form__receipt-tip {
+    display: flex;
+    justify-content: space-between;
+    color: var(--dark-gray-color);
+}
+
+.form__receipt-subtotal {
+    font-weight: var(--font-semi-bold);
+    color: var(--dark-gray-color);
+    margin-bottom: .5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form__receipt-summary {
+    margin: 0rem 1rem 1rem 1rem;
+}
+
+/* CHECKBOX */
+
 .checkbox__input {
     position: absolute;
     opacity: 0;
@@ -522,11 +679,22 @@ label {
     height: 0;
 }
 
+.checkbox__label {
+    cursor: pointer;
+    display: inline-block;
+    /* Ensure proper layout */
+    padding: 1rem;
+    /* Add padding for clickable area */
+    transition: background-color 0.3s;
+    /* Add transition for smooth color change */
+}
+
 .checkbox__label:hover {
     background-color: var(--gray-color);
 }
 
-.checkbox__input:checked+.label__text {
+/* Change label background color when checkbox is checked */
+.checkbox__label.checked {
     background-color: var(--first-color);
 }
 </style>
