@@ -173,7 +173,7 @@ img {
   padding-block: 5rem 1rem;
   height: 100vh;
   width: 100%;
-  /* display: flex; */
+  display: flex;
   justify-content: center;
   align-items: center;
 }

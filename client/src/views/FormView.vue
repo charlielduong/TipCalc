@@ -120,7 +120,7 @@
                     <div class="form__success-buttons">
                         <i class="ri-file-copy-line form__success-button" @click="copyToClipboard"></i>
                         <i class="ri-share-box-line form__success-button"></i>
-                        <a href="/design"><i class="ri-close-line"></i></a>
+                        <a href="/"><i class="ri-close-line"></i></a>
 
                     </div>
                 </div>
@@ -531,8 +531,6 @@ button.disabled-button {
 .form.section {
     display: flex;
     /* justify-content: space-evenly; */
-
-
 }
 
 .form__container {
