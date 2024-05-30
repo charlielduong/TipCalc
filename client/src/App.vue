@@ -9,18 +9,18 @@
   </div>
 
   <!-- Footer -->
-  <Footer />
+  <FooterBar />
   
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue';
-import Footer from './components/Footer.vue';
+import FooterBar from './components/FooterBar.vue';
 
   export default {
     components: {
       NavBar,
-      Footer
+      FooterBar
     },
     data() {
       return {

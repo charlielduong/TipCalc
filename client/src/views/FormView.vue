@@ -52,7 +52,7 @@
                 <!-- FORM NAME TO ITEM INPUT -->
                 <div class="form__screen" v-else-if="currentFormStep === 3">
                     <form action="" class="form__name-to-item">
-                        <template v-for="(name, index) in formData.names">
+                        <template v-for="(name, index) in formData.names" :key="index">
                             <div class="form__label" v-if="index === currentNameIndex">
                                 <h2 class="form__label-text">What did </h2>
                                 <div class="form__label-name form__list-names">{{ name }}</div>
@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="form__group form__group-name-to-item" v-if="index === currentNameIndex">
-                                <div class="form__list-purchases" v-for="item in formData.items">
+                                <div class="form__list-purchases" v-for="(item,index) in formData.items" :key="index">
                                     <label class="checkbox__label" :class="{ 'checked': item.selected }">
                                         <input class="checkbox__input" type="checkbox"
                                             @change="updatePurchases(item, name)" :value="item"
@@ -85,7 +85,7 @@
                     <h2 v-if="this.unassignedItems.length > 0" class="form__screen-label-warning">Warning!</h2>
                     <h3 v-if="this.unassignedItems.length > 0" class="form__screen-label-message">Some items weren't
                         accounted for.</h3>
-                    <template v-for="item in unassignedItems">
+                    <template v-for="(item,index) in unassignedItems" :key="index">
                         <div class="form__label form__label-fallback">
                             <p>Who bought</p>
                             <div class="form__label-name form__list-names">{{ item.itemName }}</div>
@@ -115,7 +115,7 @@
                 </div>
 
                 <!-- FORM SUMMARY -->
-                <div class="form__success" v-else="currentFormStep === 6">
+                <div class="form__success" v-else>
                     <h1 class="form__success-title">Success!</h1>
                     <div class="form__success-buttons">
                         <i class="ri-file-copy-line form__success-button" @click="copyToClipboard"></i>
@@ -198,8 +198,10 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-    // name: 'DesignView',
+
     data() {
         return {
             currentFormStep: 1,
@@ -415,7 +417,7 @@ export default {
 
             // Copy the amounts owed into the clipboard
             for (let person in amounts) {
-                if (amounts.hasOwnProperty(person)) {
+                if (Object.prototype.hasOwnProperty.call(amounts, person)) {
                     const name = person; // The key
                     const amount = amounts[person]; // The value
                     textToCopy += `${name} --- $${amount.toFixed(2)}\n`

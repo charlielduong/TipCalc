@@ -27,9 +27,6 @@ export default {
       items: [],
     };
   },
-  mounted() {
-    this.fetchItems();
-  },
   methods: {
     async fetchItems() {
       try {
