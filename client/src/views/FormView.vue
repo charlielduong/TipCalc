@@ -186,6 +186,10 @@
                             <div class="form__receipt-total-price">${{receiptTotals.total.toFixed(2) }}</div>
                         </div>
                     </div>
+                    <!-- SUBMIT BUTTON TO SUBMIT THE DATA TO MONGO??? -->
+                    <!-- <div class="button-container">
+                        <button class="form__group-button button" @click.prevent="submitForm">Next</button>
+                    </div> -->
                 </div>
             </div>
 
@@ -423,6 +427,24 @@ export default {
             }).catch(err => {
                 alert('Failed to copy receipt data.', err);
             });
+        },
+
+        submitForm() {
+            // Handle form submission
+            const formDataJson = JSON.stringify(this.formData);
+            axios.post('/process_form', formDataJson) // Fast API already expects JSON data by default
+                .then(response => {
+                    // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
+                    // Something like response.data.message?? 
+                    console.log('SUBMITTED YUHH');
+                    console.log(response.data);
+                    this.processedData = response.data;
+                })
+                .catch(error => {
+                    console.log('NOT SUUBMITTED');
+                    console.error(error);
+                });
+            console.log("UHHHH");
         }
 
     }
