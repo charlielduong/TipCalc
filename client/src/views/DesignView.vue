@@ -147,6 +147,9 @@
                     <div class="form__receipt-tax">Tax: ${{ receiptTotals.tax.toFixed(2) }}</div>
                     <div class="form__receipt-total" style="font-weight: bold;">Total: ${{ receiptTotals.total.toFixed(2) }}</div>
                 </div>
+                <div class="button-container">
+                            <button class="form__group-button button" @click.prevent="submitForm">Next</button>
+                        </div>
             </div>
 
 
@@ -156,6 +159,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     // name: 'DesignView',
     data() {
@@ -348,6 +353,24 @@ export default {
         // Deletes an item from formData.item
         deleteItem(index) {
             this.formData.items.splice(index, 1);
+        },
+
+        submitForm() {
+            // Handle form submission
+            const formDataJson = JSON.stringify(this.formData);
+            axios.post('/process_form', formDataJson) // Fast API already expects JSON data by default
+                .then(response => {
+                    // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
+                    // Something like response.data.message?? 
+                    console.log('SUBMITTED YUHH');
+                    console.log(response.data);
+                    this.processedData = response.data;
+                })
+                .catch(error => {
+                    console.log('NOT SUUBMITTED');
+                    console.error(error);
+                });
+                console.log("UHHHH");
         }
     }
 }

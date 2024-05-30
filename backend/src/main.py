@@ -3,6 +3,8 @@ from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from pymongo import MongoClient
+
 
 # from src.models import FormItem
 import logging
@@ -16,10 +18,6 @@ from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
-    
-client = pymongo.MongoClient("mongodb://root:examplepassword@mongodb:27017")
-db = client["mongodata"]
-collection = db["your_collection_name"]
 
 origins = [
     "http://localhost:8080",
@@ -30,7 +28,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins, # Allow all ports
     allow_credentials=True,
-    allow_methods=["GET", "POST"],  # Allow all methods
+    allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
 
@@ -38,36 +36,76 @@ app.add_middleware(
 def home():
     return "This is connected to the backend: main.py"
 
+logging.basicConfig(level=logging.INFO)
+
+try:
+    client = MongoClient("mongodb+srv://isaacrhong:RSjG23Javdjp49HA@testcluster.bea5cko.mongodb.net/")
+    db = client["purchases"]
+    collection = db["reciepts"]
+    items = list(collection.find({}))
+    print(items)
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+
+@app.get("/get_items")
+async def get_items():
+    try:
+        items = list(collection.find({}))  # Fetch all items from the collection
+        logging.info(f"Fetched items: {items}")
+
+        # Serialize MongoDB documents to JSON
+        serialized_items = []
+        for item in items:
+            item['_id'] = str(item['_id'])  # Convert ObjectId to string
+            serialized_items.append(item)
+
+        return JSONResponse(content={"items": serialized_items})
+    except Exception as e:
+        logging.error(f"Error fetching items: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching items: {e}")
+
+
 @app.post("/process_form")
 async def process_form(request: Request):
     data = await request.json()
+    
+    # Convert the data to a JSON file format
+    json_data = json.dumps(data, indent=2)
+    
+    # Create a document with a timestamp and the JSON data
+    document = {
+        "data": json.loads(json_data)
+    }
+    
+    # Insert the document into the MongoDB collection
+    result = collection.insert_one(document)
+    
+    # Return a response indicating success
+    return JSONResponse(content={"message": "Data processed and stored", "document_id": str(result.inserted_id)})
 
-    name_cost_dict = {}
+    # # Iterate through each item in the purchases
+    # for item_name, buyers in data["purchases"].items():
+    #     item_cost = next(item["itemCost"] for item in data["items"] if item["itemName"] == item_name)
+    #     num_buyers = len(buyers)
+    #     cost_per_buyer = item_cost / num_buyers  # Calculate the cost per buyer
+    #     for buyer in buyers:
+    #         if buyer in name_cost_dict:
+    #             name_cost_dict[buyer] += cost_per_buyer
+    #         else:
+    #             name_cost_dict[buyer] = cost_per_buyer
+    # # Calculate the total cost of the items
+    # total_cost = sum(name_cost_dict.values())
+    # # Calculate the total cost of the purchases, including the tip and tax
+    # total_cost_with_tip_and_tax = total_cost + data["tip"] + data["tax"]
+    # # Calculate the percentage of the tip and tax
+    # tip_percentage = (data["tip"] / total_cost) * 100
+    # tax_percentage = (data["tax"] / total_cost) * 100
 
-    # Iterate through each item in the purchases
-    for item_name, buyers in data["purchases"].items():
-        item_cost = next(item["itemCost"] for item in data["items"] if item["itemName"] == item_name)
-        num_buyers = len(buyers)
-        cost_per_buyer = item_cost / num_buyers  # Calculate the cost per buyer
-        for buyer in buyers:
-            if buyer in name_cost_dict:
-                name_cost_dict[buyer] += cost_per_buyer
-            else:
-                name_cost_dict[buyer] = cost_per_buyer
-    # Calculate the total cost of the items
-    total_cost = sum(name_cost_dict.values())
-    # Calculate the total cost of the purchases, including the tip and tax
-    total_cost_with_tip_and_tax = total_cost + data["tip"] + data["tax"]
-    # Calculate the percentage of the tip and tax
-    tip_percentage = (data["tip"] / total_cost) * 100
-    tax_percentage = (data["tax"] / total_cost) * 100
-
-    for purchase in name_cost_dict:
-        purchase_cost = name_cost_dict[purchase]
-        increase_amount = (purchase_cost * tip_percentage / 100) + (purchase_cost * tax_percentage / 100)
-        name_cost_dict[purchase] += increase_amount
-
-    return(name_cost_dict)
+    # for purchase in name_cost_dict:
+    #     purchase_cost = name_cost_dict[purchase]
+    #     increase_amount = (purchase_cost * tip_percentage / 100) + (purchase_cost * tax_percentage / 100)
+    #     name_cost_dict[purchase] += increase_amount
+    # return(name_cost_dict)
     # data is now an instance of FormData
     # formData = data
     # if formData:
