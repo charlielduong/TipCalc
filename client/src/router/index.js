@@ -8,24 +8,14 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/form',
-    name: 'form',
-    component: () => import(/* webpackChunkName: "form" */ '../views/FormView.vue')
-  },
-  {
     path: '/history',
     name: 'history',
     component: () => import(/* webpackChunkName: "form" */ '../views/HistoryView.vue')
   },
   {
-    path: '/design',
-    name: 'design',
-    component: () => import(/* webpackChunkName: "form" */ '../views/DesignView.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import(/* webpackChunkName: "form" */ '../views/LoginView.vue')
+    path: '/form',
+    name: 'form',
+    component: () => import(/* webpackChunkName: "form" */ '../views/FormView.vue')
   }
 
 ]

@@ -10,14 +10,13 @@
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
                     <li class="nav__item">
-                        <router-link to="/design" class="nav__link">Home</router-link>
+                        <router-link to="/" class="nav__link">Home</router-link>
+                    </li>
+                    <li class="nav__item">
+                        <router-link to="/form" class="nav__link">Form</router-link>
                     </li>
                     <li class="nav__item">
                         <router-link to="/history" class="nav__link">History</router-link>
-                    </li>
-
-                    <li class="nav__item">
-                        <!-- <router-link to="/contact" class="nav__link">Contact</router-link> -->
                     </li>
                 </ul>
             </div>
