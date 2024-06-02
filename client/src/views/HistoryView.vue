@@ -4,11 +4,11 @@
       <div class="history__container container grid">
         <h1 class="history__title">Most Recent Receipts</h1>
         <div class="history__columns">
-          <div class="history__column" v-for="(item, index) in items" :key="index" :href="item.url">
+          <a v-for="(item, index) in items" :key="index" :href="item.url" class="history__column">
             <div v-for="(dataItem, dataIndex) in item.data" :key="dataIndex">
               <div>{{ dataIndex }}: {{ dataItem }}</div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
@@ -34,16 +34,13 @@ export default {
     async fetchItems() {
       try {
         const response = await axios.get('http://localhost:5000/get_items');
-        console.log(response.data.items);
+        console.log('Response data:', response.data);
         this.items = response.data.items;  // Store the fetched items in the data property
       } catch (error) {
         console.error('Error fetching items:', error);
       }
     }
   },
-  mounted() {
-    this.fetchItems();  // Fetch items when the component is mounted
-  }
 };
 </script>
 <style>

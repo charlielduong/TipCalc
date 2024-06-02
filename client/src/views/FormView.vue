@@ -121,7 +121,10 @@
                         <i class="ri-file-copy-line form__success-button" @click="copyToClipboard"></i>
                         <i class="ri-share-box-line form__success-button"></i>
                         <a href="/"><i class="ri-close-line"></i></a>
-
+                        <!-- SUBMIT BUTTON TO SUBMIT THE DATA TO MONGO -->
+                        <div class="button-container">
+                            <button class="form__group-button button" @click.prevent="submitForm">Send To DataBase</button>
+                        </div>
                     </div>
                 </div>
 
@@ -140,6 +143,7 @@
             <div class="receipt__container container">
                 <div class="form__receipt" v-if="currentFormStep >= 1">
                     <h1 class="form__receipt-logo">Receipt</h1>
+                    <div class="form__receipt-total-price">ID: {{this.id}}</div>
                     <div class="form__receipt-items">
                         <div class="form__receipt-item-entry" v-for="item in receiptItems" :key="item.itemName">
                             <div class="form__receipt-item">
@@ -186,10 +190,6 @@
                             <div class="form__receipt-total-price">${{receiptTotals.total.toFixed(2) }}</div>
                         </div>
                     </div>
-                    <!-- SUBMIT BUTTON TO SUBMIT THE DATA TO MONGO??? -->
-                    <!-- <div class="button-container">
-                        <button class="form__group-button button" @click.prevent="submitForm">Next</button>
-                    </div> -->
                 </div>
             </div>
 
@@ -198,6 +198,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     // name: 'DesignView',
     data() {
@@ -217,8 +218,12 @@ export default {
                 },
                 tax: undefined,
                 tip: undefined,
-            }
+            },
+            id: 0
         }
+    },
+    mounted() {
+        this.fetchID();
     },
     computed: {
 
@@ -286,6 +291,7 @@ export default {
             return this.formData.items.filter(item => !this.formData.purchases[item.itemName]?.length);
         }
     },
+    
     methods: {
 
         // Moves the form to the next phase.
@@ -432,6 +438,7 @@ export default {
         submitForm() {
             // Handle form submission
             const formDataJson = JSON.stringify(this.formData);
+
             axios.post('/process_form', formDataJson) // Fast API already expects JSON data by default
                 .then(response => {
                     // THE NEWLY UPDATED JSON SHOULD BE ACCESSIBLE HERE AFTER POST REQUEST
@@ -445,7 +452,17 @@ export default {
                     console.error(error);
                 });
             console.log("UHHHH");
-        }
+        },
+
+        async fetchID() {
+            try {
+                const response = await axios.get('http://localhost:5000/get_id');
+                console.log(response.data);
+                this.id = response.data;  // Store the fetched items in the data property
+            } catch (error) {
+                console.error('Error fetching id:', error);
+            }
+            }
 
     }
 }

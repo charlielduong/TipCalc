@@ -1,9 +1,10 @@
 from typing import List, Optional
-from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, Response
+from fastapi import FastAPI, Form, UploadFile, File, Request, Depends, Response, HTTPException, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pymongo import MongoClient
+from datetime import datetime
 
 
 # from src.models import FormItem
@@ -43,7 +44,8 @@ try:
     db = client["purchases"]
     collection = db["reciepts"]
     items = list(collection.find({}))
-    print(items)
+    if db.counters.find_one({"_id": "itemId"}) is None:
+        db.counters.insert_one({"_id": "itemId", "seq": 1})
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
@@ -51,37 +53,92 @@ except Exception as e:
 async def get_items():
     try:
         items = list(collection.find({}))  # Fetch all items from the collection
-        logging.info(f"Fetched items: {items}")
-
         # Serialize MongoDB documents to JSON
         serialized_items = []
         for item in items:
             item['_id'] = str(item['_id'])  # Convert ObjectId to string
+            item["created_at"] = item["created_at"].isoformat()
             serialized_items.append(item)
-
         return JSONResponse(content={"items": serialized_items})
     except Exception as e:
         logging.error(f"Error fetching items: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching items: {e}")
+    
+@app.get("/get_id")
+async def get_id():
+    try:
+        counter_document = db['counters'].find_one({"_id": "itemId"})
+        if counter_document:
+            return counter_document["seq"] + 1
+        else:
+            return None  # Counter not found
+    except Exception as e:
+        print(f"Error getting counter value: {e}")
+        return None
+    
+# Helper Function to Get the Next Sequence Value
+def get_next_sequence_value(sequence_name):
+    try:
+        sequence_document = db.counters.find_one_and_update(
+            {"_id": sequence_name},
+            {"$inc": {"seq": 1}},
+            return_document=True  # Use 'return_document=ReturnDocument.AFTER' for pymongo<4.0
+        )
+        return sequence_document["seq"]
+    except Exception as e:
+        print(f"Error getting next sequence value: {e}")
+        raise
 
+def get_cookie(cookie_name: str = Cookie(None)):
+    return {cookie_name}
 
+# Submit all the data to MongoDB
 @app.post("/process_form")
 async def process_form(request: Request):
-    data = await request.json()
+    # Get all the data from the front end and parse it into a JSON file
+    try:
+        data = await request.json()
+    except Exception as e:
+        print(f"Error parsing JSON data: {e}")
+        return JSONResponse(content={"error": f"Error parsing JSON data: {e}"}, status_code=400)
+
+    # Get the current Date and Time
+    try:
+        created_at = datetime()
+    except Exception as e:
+        print(f"Error generating timestamp: {e}")
+        return JSONResponse(content={"error": f"Error generating timestamp: {e}"}, status_code=500)
     
-    # Convert the data to a JSON file format
-    json_data = json.dumps(data, indent=2)
+    try:
+        cookie = get_cookie()
+    except Exception as e:
+        print(f"Error generating timestamp: {e}")
+        return JSONResponse(content={"error": f"Error generating timestamp: {e}"}, status_code=500)
+
+        # Get the next ID in the sequence
+    try:
+        next_id = get_next_sequence_value("itemId")
+    except Exception as e:
+        print(f"Error generating next ID: {e}")
+        return JSONResponse(content={"error": f"Error generating next ID: {e}"}, status_code=500)
     
-    # Create a document with a timestamp and the JSON data
-    document = {
-        "data": json.loads(json_data)
-    }
-    
-    # Insert the document into the MongoDB collection
-    result = collection.insert_one(document)
-    
-    # Return a response indicating success
+    # Create a document to store in the MongoDB
+    try:
+        document = {
+            "_id": next_id,
+            "data": data,
+            "created_at": created_at,
+            "cookie": cookie,
+        }
+        result = collection.insert_one(document)
+    except Exception as e:
+        print(f"Error inserting document into MongoDB: {e}")
+        return JSONResponse(content={"error": f"Error inserting document into MongoDB: {e}"}, status_code=500)
+
     return JSONResponse(content={"message": "Data processed and stored", "document_id": str(result.inserted_id)})
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
     # # Iterate through each item in the purchases
     # for item_name, buyers in data["purchases"].items():
